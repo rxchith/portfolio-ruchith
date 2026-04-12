@@ -4,67 +4,277 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ruchith | Creative Portfolio</title>
-    <meta name="description" content="Portfolio of Ruchith - A creative developer and designer focusing on premium web experiences.">
+    <meta name="description" content="Portfolio of Ruchith — Creative developer and designer crafting premium digital experiences with cutting-edge aesthetics.">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+    <!-- Anime.js -->
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+
+    <!-- Barba.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.9.7/dist/barba.umd.js"></script>
+
+    <!-- Spline 3D Viewer -->
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.28/build/spline-viewer.js"></script>
+
+    <!-- Three.js + Lenis via importmap (ESM) -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://esm.sh/three@0.160.0",
+            "lenis": "https://esm.sh/lenis@1.1.18"
+        }
+    }
+    </script>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="cursor-glow"></div>
-    
-    <nav>
-        <div class="nav-content">
-            <div class="logo">R<span>.</span></div>
+
+    <!-- ═══ PAGE LOAD TRANSITION (Barba.js) ═══ -->
+    <div class="page-transition" id="pageTransition">
+        <div class="pt-logo">RUCHITH<span>.</span></div>
+    </div>
+
+    <!-- ═══ THREE.JS 3D CANVAS ═══ -->
+    <canvas id="threeCanvas"></canvas>
+
+    <!-- ═══ CSS ATMOSPHERE (layered over Three.js) ═══ -->
+    <div class="atmosphere">
+        <div class="ambient-glow"></div>
+        <div class="light-slash slash-1"></div>
+        <div class="light-slash slash-2"></div>
+        <div class="light-slash slash-3"></div>
+    </div>
+
+    <!-- Cursor Glow -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- ═══ NAVIGATION ═══ -->
+    <nav id="mainNav">
+        <div class="nav-inner">
+            <a href="#" class="logo">RUCHITH<span>.</span></a>
             <div class="nav-links">
-                <a href="#work">Work</a>
                 <a href="#about">About</a>
-                <a href="#contact" class="btn-primary">Connect</a>
+                <a href="#projects">Projects</a>
+                <a href="#testimonials">Testimonials</a>
+                <a href="#contact" class="nav-cta">Let's Talk</a>
             </div>
         </div>
     </nav>
 
-    <main>
-        <section id="hero">
-            <div class="hero-content">
-                <h1 class="reveal-text">Designing the <span>Future</span> of Web.</h1>
-                <p class="hero-subtitle">Creative Developer & Designer crafting high-end digital experiences that define brands.</p>
-                <div class="hero-actions">
-                    <a href="#work" class="btn-primary">View Projects</a>
-                    <a href="#about" class="btn-secondary">My Story</a>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="glow-sphere"></div>
-                <img src="assets/hero.png" alt="Futuristic Abstract Art" class="hero-img">
-            </div>
-        </section>
+    <!-- ═══ BARBA WRAPPER ═══ -->
+    <div data-barba="wrapper">
+        <main data-barba="container" data-barba-namespace="home">
 
-        <section id="work">
-            <h2 class="section-title">Selected Works</h2>
-            <div class="grid">
-                <div class="card glass">
-                    <div class="card-image" style="background-image: url('assets/project1.png')"></div>
-                    <div class="card-info">
-                        <h3>Lumina AI</h3>
-                        <p>Branding & Web Interaction</p>
+            <!-- ─── HERO ─── -->
+            <section id="hero">
+                <div class="hero-inner">
+                    <div class="hero-badge">
+                        <span class="badge-dot"></span>
+                        Available for work
+                    </div>
+                    <h1 id="heroTitle">
+                        <span class="title-line">I craft digital</span>
+                        <span class="title-line">experiences that</span>
+                        <span class="title-line"><span class="accent-text">feel alive.</span></span>
+                    </h1>
+                    <p class="hero-sub">
+                        Creative developer &amp; designer building immersive,
+                        high-end web experiences with obsessive attention to detail.
+                    </p>
+                    <div class="hero-cta-row">
+                        <a href="#projects" class="btn-glass-primary">
+                            <span>Explore Work</span>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </a>
+                        <a href="#about" class="btn-ghost">About Me</a>
+                    </div>
+
+                    <!-- Spline 3D accent (hero visual) -->
+                    <div class="hero-spline-wrap">
+                        <spline-viewer url="https://prod.spline.design/6Wq1Q7YGyM-uBm2/scene.splinecode" loading-anim-type="none"></spline-viewer>
+                    </div>
+
+                    <div class="hero-scroll-hint">
+                        <div class="scroll-line"></div>
+                        <span>Scroll</span>
                     </div>
                 </div>
-                <div class="card glass">
-                    <div class="card-image project-2"></div>
-                    <div class="card-info">
-                        <h3>Horizon</h3>
-                        <p>SaaS Design System</p>
+            </section>
+
+            <!-- ─── ABOUT ─── -->
+            <section id="about">
+                <div class="section-header">
+                    <span class="section-label">01 — About</span>
+                    <h2>I turn bold ideas<br>into <span class="accent-text">pixel-perfect</span> reality.</h2>
+                </div>
+                <div class="about-grid">
+                    <div class="about-text">
+                        <p class="about-lead">
+                            I'm Ruchith — a creative developer and designer driven by the belief that the web
+                            should feel cinematic, not static. Every project I take on is an opportunity to push
+                            boundaries and craft something that stops people mid-scroll.
+                        </p>
+                        <p>
+                            With a deep love for design engineering, I specialize in building interfaces that
+                            blend stunning visuals with buttery-smooth interactions. From brand identities to
+                            full-stack applications, I obsess over the details that make digital products feel premium.
+                        </p>
+                    </div>
+                    <div class="about-stats">
+                        <div class="stat-card glass-card">
+                            <span class="stat-number">3+</span>
+                            <span class="stat-label">Years of<br>Experience</span>
+                        </div>
+                        <div class="stat-card glass-card">
+                            <span class="stat-number">20+</span>
+                            <span class="stat-label">Projects<br>Delivered</span>
+                        </div>
+                        <div class="stat-card glass-card">
+                            <span class="stat-number">15+</span>
+                            <span class="stat-label">Happy<br>Clients</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
+                <div class="skills-row">
+                    <div class="skill-pill">UI/UX Design</div>
+                    <div class="skill-pill">React / Next.js</div>
+                    <div class="skill-pill">Three.js / WebGL</div>
+                    <div class="skill-pill">Figma</div>
+                    <div class="skill-pill">Motion Design</div>
+                    <div class="skill-pill">Branding</div>
+                    <div class="skill-pill">Framer</div>
+                    <div class="skill-pill">TypeScript</div>
+                </div>
+            </section>
+
+            <!-- ─── PROJECTS ─── -->
+            <section id="projects">
+                <div class="section-header">
+                    <span class="section-label">02 — Projects</span>
+                    <h2>Selected <span class="accent-text">works</span>.</h2>
+                </div>
+                <div class="projects-grid">
+                    <article class="project-card">
+                        <div class="project-image-wrap">
+                            <img src="assets/project1.png" alt="Lumina AI Dashboard" class="project-img" loading="lazy">
+                            <div class="project-overlay">
+                                <span class="project-view">View Project →</span>
+                            </div>
+                        </div>
+                        <div class="project-meta">
+                            <h3>Lumina AI</h3>
+                            <span class="project-tag">Dashboard · AI · Branding</span>
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <div class="project-image-wrap">
+                            <img src="assets/project2.png" alt="Aurora Design System" class="project-img" loading="lazy">
+                            <div class="project-overlay">
+                                <span class="project-view">View Project →</span>
+                            </div>
+                        </div>
+                        <div class="project-meta">
+                            <h3>Aurora</h3>
+                            <span class="project-tag">Design System · SaaS</span>
+                        </div>
+                    </article>
+                    <article class="project-card project-card-wide">
+                        <div class="project-image-wrap">
+                            <img src="assets/project3.png" alt="Nova Fintech App" class="project-img" loading="lazy">
+                            <div class="project-overlay">
+                                <span class="project-view">View Project →</span>
+                            </div>
+                        </div>
+                        <div class="project-meta">
+                            <h3>Nova</h3>
+                            <span class="project-tag">Mobile App · Fintech · UI/UX</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ─── TESTIMONIALS ─── -->
+            <section id="testimonials">
+                <div class="section-header">
+                    <span class="section-label">03 — Testimonials</span>
+                    <h2>What people <span class="accent-text">say</span>.</h2>
+                </div>
+                <div class="testimonials-track">
+                    <div class="testimonial-card glass-card">
+                        <div class="testimonial-quote">"</div>
+                        <p>Ruchith delivered a design that completely blew us away. The attention to detail and the premium feel of every interaction made our product stand out in a crowded market.</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">AK</div>
+                            <div>
+                                <strong>Aiden Kapoor</strong>
+                                <span>CEO, Lumina Labs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card glass-card">
+                        <div class="testimonial-quote">"</div>
+                        <p>Working with Ruchith was a game-changer for our brand. He doesn't just design — he engineers experiences. The kind of polish he brings is rare and incredibly impactful.</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">SR</div>
+                            <div>
+                                <strong>Sofia Reyes</strong>
+                                <span>Founder, Horizon SaaS</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card glass-card">
+                        <div class="testimonial-quote">"</div>
+                        <p>The level of craft Ruchith puts into every pixel is extraordinary. Our app's user engagement doubled after the redesign. He thinks like a product designer and executes like an artist.</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">MJ</div>
+                            <div>
+                                <strong>Marcus Jensen</strong>
+                                <span>CTO, Nova Finance</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ─── CONTACT ─── -->
+            <section id="contact">
+                <div class="contact-inner">
+                    <span class="section-label">04 — Contact</span>
+                    <h2 class="contact-headline">Let's build something<br><span class="accent-text">extraordinary</span>.</h2>
+                    <p class="contact-sub">Got a project in mind? I'd love to hear about it.</p>
+                    <a href="mailto:hello@ruchith.dev" class="btn-glass-primary btn-lg">
+                        <span>Get in Touch</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                </div>
+            </section>
+
+        </main>
+    </div>
 
     <footer>
-        <p>&copy; 2024 Ruchith. Built with passion.</p>
+        <div class="footer-inner">
+            <span class="footer-logo">RUCHITH<span>.</span></span>
+            <div class="footer-links">
+                <a href="#">Twitter</a>
+                <a href="#">GitHub</a>
+                <a href="#">Dribbble</a>
+                <a href="#">LinkedIn</a>
+            </div>
+            <p class="footer-copy">&copy; 2024 Ruchith. Designed with obsession.</p>
+        </div>
     </footer>
 
-    <script src="main.js"></script>
+    <!-- Main Script (ES module for Three.js + Lenis imports) -->
+    <script type="module" src="main.js"></script>
 </body>
 </html>
