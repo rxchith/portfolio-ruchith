@@ -254,6 +254,48 @@ nav.scrolled {
     transform: translateY(-1px);
 }
 
+/* Nav link hover underline (injected by JS) */
+.nav-hover-line {
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--red), var(--red-hot));
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    pointer-events: none;
+}
+
+/* Interactive cursor hints */
+.btn-glass-primary,
+.btn-ghost,
+.nav-cta,
+.skill-pill,
+.stat-card,
+.project-card,
+.testimonial-card,
+.hero-badge,
+.section-label,
+.footer-links a,
+.logo,
+.nav-links a {
+    cursor: pointer;
+}
+
+/* GPU hints for hover-animated elements */
+.stat-card,
+.skill-pill,
+.testimonial-card,
+.project-card,
+.hero-badge,
+.btn-glass-primary,
+.btn-ghost {
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+}
+
 
 /* ═══════════════════════════════════════
    GLOBAL SECTION STYLES

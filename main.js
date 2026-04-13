@@ -405,50 +405,353 @@ function initScrollAnimations() {
 
 
 /* ═══════════════════════════════════════
-   6. INTERACTIONS — Cursor, Card Tilt, Hover
+   6. INTERACTIONS — Rich hover effects
+   Uses: GSAP, Anime.js, Three.js
    ═══════════════════════════════════════ */
 const cursorGlow = document.getElementById('cursorGlow');
 const nav = document.getElementById('mainNav');
 let wasScrolled = false;
+let cursorScale = 1;
+let currentCursorScale = 1;
 
-// ─── Project card tilt (GSAP-driven) ───
+
+// ─── A. MAGNETIC BUTTONS (GSAP) ───
+// Buttons pull toward the cursor on hover for a premium tactile feel
+document.querySelectorAll('.btn-glass-primary, .btn-ghost, .nav-cta').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        gsap.to(btn, {
+            x: x * 0.3,
+            y: y * 0.3,
+            scale: 1.05,
+            duration: 0.4,
+            ease: 'power2.out',
+            overwrite: 'auto',
+        });
+        cursorScale = 1.8;
+    }, { passive: true });
+
+    btn.addEventListener('mouseleave', () => {
+        gsap.to(btn, {
+            x: 0, y: 0, scale: 1,
+            duration: 0.6,
+            ease: 'elastic.out(1, 0.4)',
+            overwrite: 'auto',
+        });
+        cursorScale = 1;
+    });
+});
+
+
+// ─── B. NAV LINK HOVER (GSAP + Anime.js) ───
+// Links get a subtle lift and color shift; active link gets underline animation
+document.querySelectorAll('.nav-links a:not(.nav-cta)').forEach(link => {
+    const underline = document.createElement('span');
+    underline.className = 'nav-hover-line';
+    link.style.position = 'relative';
+    link.appendChild(underline);
+
+    link.addEventListener('mouseenter', () => {
+        gsap.to(link, { y: -2, color: '#ffffff', duration: 0.3, ease: 'power2.out' });
+        gsap.fromTo(underline,
+            { scaleX: 0, transformOrigin: 'left center' },
+            { scaleX: 1, duration: 0.4, ease: 'power3.out' }
+        );
+        cursorScale = 1.4;
+    });
+
+    link.addEventListener('mouseleave', () => {
+        gsap.to(link, { y: 0, color: 'rgba(255,255,255,0.55)', duration: 0.3, ease: 'power2.out' });
+        gsap.to(underline, { scaleX: 0, transformOrigin: 'right center', duration: 0.3, ease: 'power3.in' });
+        cursorScale = 1;
+    });
+});
+
+
+// ─── C. PROJECT CARD TILT (GSAP) ───
+// 3D perspective tilt with image zoom and overlay reveal
 document.querySelectorAll('.project-card').forEach(card => {
+    const img = card.querySelector('.project-img');
+    const overlay = card.querySelector('.project-overlay');
+
     card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
         gsap.to(card, {
-            rotateX: -y * 8,
-            rotateY: x * 8,
-            y: -8,
+            rotateX: -y * 10,
+            rotateY: x * 10,
+            y: -10,
             duration: 0.5,
             ease: 'power2.out',
             transformPerspective: 800,
             overwrite: 'auto',
         });
+        if (img) gsap.to(img, { scale: 1.08, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
+        cursorScale = 1.6;
     }, { passive: true });
+
+    card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+            borderColor: 'rgba(255, 59, 48, 0.3)',
+            boxShadow: '0 40px 80px -20px rgba(0,0,0,0.7), 0 0 80px rgba(255,59,48,0.12)',
+            duration: 0.5
+        });
+    });
 
     card.addEventListener('mouseleave', () => {
         gsap.to(card, {
             rotateX: 0, rotateY: 0, y: 0,
-            duration: 0.6, ease: 'power2.out',
+            borderColor: 'rgba(255,255,255,0.08)',
+            boxShadow: 'none',
+            duration: 0.7, ease: 'elastic.out(1, 0.5)',
             overwrite: 'auto',
         });
+        if (img) gsap.to(img, { scale: 1, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+        cursorScale = 1;
     });
 });
 
-// ─── Testimonial hover glow ───
+
+// ─── D. EXPERIENCE/GLASS CARD TILT + GLOW (GSAP) ───
+// Cards get subtle 3D tilt, spotlight glow following mouse, and border brighten
 document.querySelectorAll('.testimonial-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
         const r = card.getBoundingClientRect();
         const x = e.clientX - r.left;
         const y = e.clientY - r.top;
-        card.style.background = `radial-gradient(400px circle at ${x}px ${y}px, rgba(255,59,48,0.06), rgba(255,255,255,0.03))`;
+        const px = (x / r.width - 0.5) * 2;
+        const py = (y / r.height - 0.5) * 2;
+
+        card.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(255,59,48,0.08), rgba(255,255,255,0.02))`;
+
+        gsap.to(card, {
+            rotateX: -py * 4,
+            rotateY: px * 4,
+            y: -6,
+            borderColor: 'rgba(255, 59, 48, 0.2)',
+            boxShadow: `0 25px 50px -15px rgba(0,0,0,0.5), 0 0 60px rgba(255,59,48,0.08)`,
+            duration: 0.5,
+            ease: 'power2.out',
+            transformPerspective: 1000,
+            overwrite: 'auto',
+        });
+        cursorScale = 1.3;
     }, { passive: true });
 
     card.addEventListener('mouseleave', () => {
         card.style.background = 'rgba(255,255,255,0.03)';
+        gsap.to(card, {
+            rotateX: 0, rotateY: 0, y: 0,
+            borderColor: 'rgba(255,255,255,0.08)',
+            boxShadow: 'none',
+            duration: 0.6, ease: 'power2.out',
+            overwrite: 'auto',
+        });
+        cursorScale = 1;
     });
+});
+
+
+// ─── E. STAT CARD HOVER (GSAP) ───
+// Stat numbers scale up and glow on hover
+document.querySelectorAll('.stat-card').forEach(card => {
+    const num = card.querySelector('.stat-number');
+    card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+            y: -6, borderColor: 'rgba(255,59,48,0.25)',
+            boxShadow: '0 20px 40px -12px rgba(0,0,0,0.5), 0 0 40px rgba(255,59,48,0.1)',
+            duration: 0.4, ease: 'power2.out',
+        });
+        if (num) gsap.to(num, { scale: 1.12, duration: 0.4, ease: 'back.out(2)' });
+        cursorScale = 1.3;
+    });
+    card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+            y: 0, borderColor: 'rgba(255,255,255,0.08)',
+            boxShadow: 'none',
+            duration: 0.5, ease: 'power2.out',
+        });
+        if (num) gsap.to(num, { scale: 1, duration: 0.4, ease: 'power2.out' });
+        cursorScale = 1;
+    });
+});
+
+
+// ─── F. SKILL PILL WAVE (Anime.js) ───
+// Hovering one pill triggers a wave animation across neighbors
+const skillPills = document.querySelectorAll('.skill-pill');
+skillPills.forEach((pill, index) => {
+    pill.addEventListener('mouseenter', () => {
+        // Animate the hovered pill with GSAP
+        gsap.to(pill, {
+            y: -4, scale: 1.08,
+            borderColor: '#ff3b30',
+            color: '#ffffff',
+            backgroundColor: 'rgba(255,59,48,0.12)',
+            boxShadow: '0 0 25px rgba(255,59,48,0.15)',
+            duration: 0.3, ease: 'power2.out',
+        });
+
+        // Anime.js wave on neighbors — ripple outward
+        anime({
+            targets: Array.from(skillPills).filter((_, i) => i !== index),
+            translateY: (el, i) => {
+                const dist = Math.abs(i - (i >= index ? index : index - 1));
+                return dist <= 3 ? -2 * (3 - dist) : 0;
+            },
+            duration: 500,
+            easing: 'easeOutElastic(1, .6)',
+            delay: anime.stagger(30, { from: index }),
+        });
+
+        cursorScale = 1.2;
+    });
+
+    pill.addEventListener('mouseleave', () => {
+        gsap.to(pill, {
+            y: 0, scale: 1,
+            borderColor: 'rgba(255,255,255,0.08)',
+            color: 'rgba(255,255,255,0.55)',
+            backgroundColor: 'rgba(255,255,255,0.03)',
+            boxShadow: 'none',
+            duration: 0.4, ease: 'power2.out',
+        });
+        // Settle neighbors
+        anime({
+            targets: Array.from(skillPills).filter((_, i) => i !== index),
+            translateY: 0,
+            duration: 600,
+            easing: 'easeOutQuad',
+        });
+        cursorScale = 1;
+    });
+});
+
+
+// ─── G. HERO BADGE HOVER (GSAP) ───
+const heroBadge = document.querySelector('.hero-badge');
+if (heroBadge) {
+    heroBadge.addEventListener('mouseenter', () => {
+        gsap.to(heroBadge, {
+            scale: 1.05, y: -3,
+            borderColor: 'rgba(74, 222, 128, 0.3)',
+            boxShadow: '0 8px 24px -8px rgba(74, 222, 128, 0.15)',
+            duration: 0.3, ease: 'power2.out',
+        });
+        gsap.to('.badge-dot', { scale: 1.3, boxShadow: '0 0 20px rgba(74, 222, 128, 0.8)', duration: 0.3 });
+        cursorScale = 1.3;
+    });
+    heroBadge.addEventListener('mouseleave', () => {
+        gsap.to(heroBadge, {
+            scale: 1, y: 0,
+            borderColor: 'rgba(255,255,255,0.08)',
+            boxShadow: 'none',
+            duration: 0.4, ease: 'power2.out',
+        });
+        gsap.to('.badge-dot', { scale: 1, boxShadow: '0 0 12px rgba(74, 222, 128, 0.6)', duration: 0.4 });
+        cursorScale = 1;
+    });
+}
+
+
+// ─── H. SECTION LABEL HOVER (GSAP) ───
+document.querySelectorAll('.section-label').forEach(label => {
+    label.addEventListener('mouseenter', () => {
+        gsap.to(label, {
+            letterSpacing: '0.28em', x: 4,
+            duration: 0.4, ease: 'power2.out',
+        });
+        cursorScale = 1.2;
+    });
+    label.addEventListener('mouseleave', () => {
+        gsap.to(label, {
+            letterSpacing: '0.2em', x: 0,
+            duration: 0.4, ease: 'power2.out',
+        });
+        cursorScale = 1;
+    });
+});
+
+
+// ─── I. FOOTER LINK HOVER (GSAP) ───
+document.querySelectorAll('.footer-links a').forEach(link => {
+    link.addEventListener('mouseenter', () => {
+        gsap.to(link, {
+            y: -2, color: '#ff3b30',
+            duration: 0.3, ease: 'power2.out',
+        });
+        cursorScale = 1.3;
+    });
+    link.addEventListener('mouseleave', () => {
+        gsap.to(link, {
+            y: 0, color: 'rgba(255,255,255,0.3)',
+            duration: 0.3, ease: 'power2.out',
+        });
+        cursorScale = 1;
+    });
+});
+
+
+// ─── J. LOGO HOVER (Anime.js) ───
+const logoEl = document.querySelector('.logo');
+if (logoEl) {
+    logoEl.addEventListener('mouseenter', () => {
+        gsap.to(logoEl, { scale: 1.08, duration: 0.3, ease: 'back.out(2)' });
+        // Anime.js: red dot pulse
+        anime({
+            targets: '.logo span',
+            scale: [1, 1.6, 1],
+            duration: 600,
+            easing: 'easeOutElastic(1, .4)',
+        });
+        cursorScale = 1.5;
+    });
+    logoEl.addEventListener('mouseleave', () => {
+        gsap.to(logoEl, { scale: 1, duration: 0.4, ease: 'power2.out' });
+        cursorScale = 1;
+    });
+}
+
+
+// ─── K. CONTACT CTA HOVER (GSAP + Anime.js) ───
+const contactBtn = document.querySelector('#contact .btn-glass-primary');
+if (contactBtn) {
+    contactBtn.addEventListener('mouseenter', () => {
+        gsap.to(contactBtn, {
+            scale: 1.06, y: -3,
+            boxShadow: '0 20px 50px -10px rgba(255,59,48,0.5)',
+            duration: 0.4, ease: 'power2.out',
+        });
+        // Anime.js: arrow icon nudge loop
+        anime({
+            targets: contactBtn.querySelector('svg'),
+            translateX: [0, 6, 0],
+            duration: 800,
+            easing: 'easeInOutSine',
+            loop: 2,
+        });
+    });
+    contactBtn.addEventListener('mouseleave', () => {
+        gsap.to(contactBtn, {
+            scale: 1, y: 0,
+            boxShadow: '0 12px 30px -8px rgba(255,59,48,0.4)',
+            duration: 0.5, ease: 'power2.out',
+        });
+    });
+}
+
+
+// ─── L. THREE.JS REACTIVE LIGHTING ───
+// When hovering over content sections, the 3D lights react
+let lightBoost = 0;
+let targetLightBoost = 0;
+
+document.querySelectorAll('section').forEach(section => {
+    section.addEventListener('mouseenter', () => { targetLightBoost = 1; });
+    section.addEventListener('mouseleave', () => { targetLightBoost = 0; });
 });
 
 
@@ -459,10 +762,16 @@ gsap.ticker.add((time) => {
     // Three.js render
     renderScene(time);
 
-    // Cursor glow follow (lerp)
+    // Three.js reactive lighting — boost intensity near cursor
+    lightBoost += (targetLightBoost - lightBoost) * 0.05;
+    redLight1.intensity = 60 + lightBoost * 30;
+    redLight2.intensity = 35 + lightBoost * 20;
+
+    // Cursor glow follow (lerp) with dynamic scaling
     gx += (mx - gx) * 0.1;
     gy += (my - gy) * 0.1;
-    cursorGlow.style.transform = `translate3d(${gx - 175}px, ${gy - 175}px, 0)`;
+    currentCursorScale += (cursorScale - currentCursorScale) * 0.12;
+    cursorGlow.style.transform = `translate3d(${gx - 175}px, ${gy - 175}px, 0) scale(${currentCursorScale})`;
 
     // Nav scroll state (toggle only on change)
     const isScrolled = lenis.scroll > 50;
