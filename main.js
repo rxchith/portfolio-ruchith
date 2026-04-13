@@ -382,13 +382,13 @@ function initScrollAnimations() {
         y: 80, opacity: 0, stagger: 0.2, duration: 1.1, ease: 'power3.out'
     });
 
-    // ─── TESTIMONIALS SECTION ───
-    gsap.from('#testimonials .section-label', {
-        scrollTrigger: { trigger: '#testimonials', start: 'top 80%' },
+    // ─── EXPERIENCE SECTION ───
+    gsap.from('#experience .section-label', {
+        scrollTrigger: { trigger: '#experience', start: 'top 80%' },
         y: 30, opacity: 0, duration: 0.8, ease: 'power3.out'
     });
-    gsap.from('#testimonials .section-header h2', {
-        scrollTrigger: { trigger: '#testimonials', start: 'top 78%' },
+    gsap.from('#experience .section-header h2', {
+        scrollTrigger: { trigger: '#experience', start: 'top 78%' },
         y: 50, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.1
     });
     gsap.from('.testimonial-card', {
