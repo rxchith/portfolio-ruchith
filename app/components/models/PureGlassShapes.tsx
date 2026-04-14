@@ -86,19 +86,25 @@ export function PureGlassShapes() {
   const shapes = useMemo(() => {
     const vibrantPalette = ['#00F2FF', '#FF7F00', '#32FF00', '#FF00FF', '#FFD700', '#007FFF'];
     const startY = 8; 
-    const spacing = 18;
+    const spacing = 35; // increased to spread them out more
 
     return uniqueMeshes.map((mesh, i) => {
       const sides = [1, -1, 1, -1, 1, -1, 1, -1];
       const side = sides[i % sides.length];
       
       // Fixed: Pushing further to the sides (min 35 units) and removing massive scales
-      const xPos = (35 + (i * 3) % 15) * side; 
-      const yPos = startY - (i * spacing); 
-      const zPos = -28; 
+      // Reduced minimum offset to 30 to fill more space
+      const xPos = (30 + (i * 3) % 15) * side; 
+      // Explicitly set first 3 positions to be visible in the Hero section
+      const yPos = i < 3 ? (4 - i * 3) : startY - (i * spacing); 
+      // Shift first 3 shapes closer to the camera for the hero section
+      const zPos = i < 3 ? -12 : -28; 
       
-      const sizes = [0.4, 0.7, 0.5, 0.8, 0.3, 0.6, 0.4, 0.7];
-      const scale = sizes[i % sizes.length];
+      // Massive scales (min 2.0, max 3.5) for a full hero section
+      // Boost the first 3 for even more presence
+      const sizes = [2.5, 3.5, 2.2, 3.2, 2.0, 3.0, 2.4, 3.5];
+      let scale = sizes[i % sizes.length];
+      if (i < 3) scale *= 1.3;
 
       return {
         id: mesh.uuid + i,

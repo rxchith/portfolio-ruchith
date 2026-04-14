@@ -25,8 +25,8 @@ function FloatingIcon({ mesh, color, position, rotationSpeed = 1 }: { mesh: THRE
     const radius = clone.geometry.boundingSphere?.radius || 1;
     clone.scale.setScalar(1 / radius);
     
-    // Apply a very small final scale (0.25) to prevent "super sizing"
-    clone.scale.multiplyScalar(0.25);
+    // Scaled up significantly to 1.5 for a bold, intentional look
+    clone.scale.multiplyScalar(1.5);
     
     clone.material = new THREE.MeshPhysicalMaterial({
       color: color,
@@ -91,13 +91,13 @@ const Hero = () => {
           <FloatingIcon 
             mesh={heroMeshes[0]} 
             color="#00F2FF" 
-            position={[-4.5, 0.5, 0]} 
+            position={[-6.5, 0.5, 0]} 
             rotationSpeed={0.5} 
           />
           <FloatingIcon 
             mesh={heroMeshes[1]} 
             color="#FF7F00" 
-            position={[4.5, -0.5, 0]} 
+            position={[6.5, -0.5, 0]} 
             rotationSpeed={-0.3} 
           />
         </group>

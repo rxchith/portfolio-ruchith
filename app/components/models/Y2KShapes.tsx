@@ -75,17 +75,18 @@ export function ScatteredShapes() {
 
   const shapes = useMemo(() => {
     const startY = 20;
-    const spacing = 18;
+    const spacing = 40; // Increased significantly to prevent crowding at the bottom
 
     return uniqueMeshes.map((mesh, i) => {
       const leftRight = [1, -1, 1, 1, -1, -1, 1, -1];
       const side = leftRight[i % leftRight.length];
       
-      const xPos = (14 + (i * 2) % 10) * side; 
+      const xPos = (30 + (i * 2) % 10) * side; 
       const yPos = startY - (i * spacing); 
-      const zPos = -12; 
+      const zPos = -15; // Slightly deeper to allow larger scales without covering text
       
-      const sizes = [1.2, 2.8, 0.8, 4.0, 1.5, 3.2, 1.0, 2.5];
+      // Increased scales (previous min 0.8, now min 4.0)
+      const sizes = [4.5, 6.0, 4.0, 7.5, 5.0, 6.5, 4.2, 5.5];
       const scale = sizes[i % sizes.length];
 
       return {
