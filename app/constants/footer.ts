@@ -29,6 +29,6 @@ export const FOOTER_LINKS: FooterLink[] = [
     name: 'Resume',
     hoverText: 'Download',
     icon: 'icons/file.svg',
-    url: './Mohit Virli - Resume.pdf',
+    url: './Ruchith - Resume.pdf',
   }
 ];

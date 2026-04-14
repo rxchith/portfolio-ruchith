@@ -8,7 +8,7 @@ import * as THREE from 'three';
 interface InternalPearlyProps {
   index: number;
   mesh: THREE.Mesh;
-  pastelColor: string;
+  color: string;
   speed?: number;
   position?: [number, number, number];
   scale?: number;
@@ -16,12 +16,12 @@ interface InternalPearlyProps {
 }
 
 /**
- * SinglePearlyShape — Renders one specific mesh with a premium Pastel finish.
+ * SingleVibrantPearlyShape — Renders shapes with the high-intensity clay/plastic look.
  */
-function SinglePearlyShape({ index, mesh, pastelColor, speed = 1, ...props }: InternalPearlyProps) {
+function SingleVibrantPearlyShape({ index, mesh, color, speed = 1, ...props }: InternalPearlyProps) {
   const groupRef = useRef<THREE.Group>(null);
 
-  const pearlyMesh = useMemo(() => {
+  const vibrantMesh = useMemo(() => {
     const clone = mesh.clone();
     clone.geometry = mesh.geometry.clone();
     clone.geometry.center(); 
@@ -30,20 +30,19 @@ function SinglePearlyShape({ index, mesh, pastelColor, speed = 1, ...props }: In
     clone.scale.setScalar(1 / radius);
 
     clone.material = new THREE.MeshPhysicalMaterial({
-      color: pastelColor,
+      color: color, 
       metalness: 0,
-      roughness: 0.2,
-      clearcoat: 1,
+      roughness: 0.45,
+      clearcoat: 1.0,
       clearcoatRoughness: 0.1,
-      iridescence: 1,
-      iridescenceIOR: 1.6,
-      iridescenceThicknessRange: [200, 500],
-      sheen: 1,
+      sheen: 1.0,
+      sheenRoughness: 0.5,
       sheenColor: '#ffffff',
+      envMapIntensity: 2.5,
     });
     
     return clone;
-  }, [mesh, pastelColor]);
+  }, [mesh, color]);
 
   useFrame((state) => {
     if (groupRef.current) {
@@ -56,13 +55,13 @@ function SinglePearlyShape({ index, mesh, pastelColor, speed = 1, ...props }: In
 
   return (
     <group ref={groupRef} {...props} dispose={null}>
-      <primitive object={pearlyMesh} />
+      <primitive object={vibrantMesh} />
     </group>
   );
 }
 
 /**
- * PearlyShapes — Renders unique glossy shapes with DETERMINISTIC layout.
+ * PearlyShapes — Vibrant High-Intensity shapes with STRICT scale control.
  */
 export function PearlyShapes() {
   const { scene } = useGLTF('models/glossy_shapes.glb');
@@ -80,28 +79,26 @@ export function PearlyShapes() {
   }, [scene]);
 
   const shapes = useMemo(() => {
-    const pastelPalette = [
-      '#FFD1DC', '#B2E2F2', '#C1E1C1', '#DCD0FF', '#FFF9B1', '#FFB7B2', '#E2F0CB',
-    ];
-
+    const vibrantPalette = ['#FF1DCE', '#00F5FF', '#76FF03', '#FFD600', '#6200EA', '#FF3D00', '#1DE9B6'];
     const startY = 14; 
     const spacing = 18;
 
     return uniqueMeshes.map((mesh, i) => {
-      const leftRight = [-1, 1, -1, -1, 1, 1, -1, 1];
-      const side = leftRight[i % leftRight.length];
+      const sides = [-1, 1, -1, 1, -1, 1, -1, 1];
+      const side = sides[i % sides.length];
       
-      const xPos = (24 + (i * 2) % 8) * side; 
+      // Fixed: Pushing further to the sides (min 30 units) and capping scale at 2.2
+      const xPos = (30 + (i * 2) % 10) * side; 
       const yPos = startY - (i * spacing); 
       const zPos = -22; 
       
-      const sizes = [2.2, 4.2, 1.8, 5.0, 2.8, 3.5, 1.5, 4.0];
+      const sizes = [0.5, 0.8, 0.4, 0.9, 0.6, 0.7, 0.3, 0.8];
       const scale = sizes[i % sizes.length];
       
       return {
         id: mesh.uuid + i,
         mesh,
-        pastelColor: pastelPalette[i % pastelPalette.length],
+        color: vibrantPalette[i % vibrantPalette.length],
         position: [xPos, yPos, zPos] as [number, number, number],
         scale: scale, 
         speed: 0.3 + (i * 0.05),
@@ -115,11 +112,11 @@ export function PearlyShapes() {
   return (
     <group>
       {shapes.map((s) => (
-        <SinglePearlyShape 
+        <SingleVibrantPearlyShape 
           key={s.id} 
           index={0} 
           mesh={s.mesh}
-          pastelColor={s.pastelColor}
+          color={s.color}
           position={s.position} 
           scale={s.scale} 
           speed={s.speed}

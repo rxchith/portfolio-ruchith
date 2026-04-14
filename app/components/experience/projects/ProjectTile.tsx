@@ -26,6 +26,7 @@ const ProjectTile = ({ project, index, position, rotation, activeId, onClick }: 
   const titleProps = useMemo(() => ({
     font: "./soria-font.ttf",
     color: "white",
+    letterSpacing: -0.05,
   }), []);
 
   const subtitleProps: Partial<TextProps> = useMemo(() => ({

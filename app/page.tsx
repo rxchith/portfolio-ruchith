@@ -11,22 +11,25 @@ import { ScatteredShapes } from "./components/models/Y2KShapes";
 
 const Home = () => {
   return (
-    <CanvasLoader>
-      {/* Chrome Y2K Shapes */}
-      <ScatteredShapes />
-      
-      {/* Iridescent Pearly Shapes */}
-      <PearlyShapes />
+    <main className="min-h-screen relative">
+      {/* Interactive 3D Canvas Context */}
+      <CanvasLoader>
+        {/* Chrome Y2K Shapes */}
+        <ScatteredShapes />
+        
+        {/* Vibrant Clay/Pearly Shapes */}
+        <PearlyShapes />
 
-      {/* Pure Refractive Glass Shapes */}
-      <PureGlassShapes />
-      
-      <ScrollWrapper>
-        <Hero/>
-        <Experience/>
-        <Footer/>
-      </ScrollWrapper>
-    </CanvasLoader>
+        {/* Vibrant Clay/Plastic Shapes */}
+        <PureGlassShapes />
+        
+        <ScrollWrapper>
+          <Hero/>
+          <Experience/>
+          <Footer/>
+        </ScrollWrapper>
+      </CanvasLoader>
+    </main>
   );
 };
 export default Home;

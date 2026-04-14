@@ -8,6 +8,7 @@ import * as THREE from 'three';
 interface InternalGlassProps {
   index: number;
   mesh: THREE.Mesh;
+  color: string;
   speed?: number;
   position?: [number, number, number];
   scale?: number;
@@ -15,12 +16,12 @@ interface InternalGlassProps {
 }
 
 /**
- * SingleGlassShape — Renders one specific mesh with a high-end Glass finish.
+ * SingleVibrantShape — Renders shapes with the high-intensity clay/plastic look.
  */
-function SingleGlassShape({ index, mesh, speed = 1, ...props }: InternalGlassProps) {
+function SingleVibrantShape({ index, mesh, color, speed = 1, ...props }: InternalGlassProps) {
   const groupRef = useRef<THREE.Group>(null);
 
-  const glassMesh = useMemo(() => {
+  const vibrantMesh = useMemo(() => {
     const clone = mesh.clone();
     clone.geometry = mesh.geometry.clone();
     clone.geometry.center(); 
@@ -29,19 +30,19 @@ function SingleGlassShape({ index, mesh, speed = 1, ...props }: InternalGlassPro
     clone.scale.setScalar(1 / radius);
 
     clone.material = new THREE.MeshPhysicalMaterial({
-      color: '#ffffff',
+      color: color, 
       metalness: 0,
-      roughness: 0.1,
-      transmission: 1, 
-      thickness: 1.5,
-      ior: 1.5,
-      clearcoat: 1,
-      envMapIntensity: 1.5,
-      transparent: true,
+      roughness: 0.45,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.1,
+      sheen: 1.0,
+      sheenRoughness: 0.5,
+      sheenColor: '#ffffff',
+      envMapIntensity: 2.5,
     });
     
     return clone;
-  }, [mesh]);
+  }, [mesh, color]);
 
   useFrame((state) => {
     if (groupRef.current) {
@@ -54,13 +55,13 @@ function SingleGlassShape({ index, mesh, speed = 1, ...props }: InternalGlassPro
 
   return (
     <group ref={groupRef} {...props} dispose={null}>
-      <primitive object={glassMesh} />
+      <primitive object={vibrantMesh} />
     </group>
   );
 }
 
 /**
- * PureGlassShapes — Renders unique shapes from two files with NO DUPLICATES and wide spacing.
+ * PureGlassShapes — Vibrant Clay/Plastic Shapes with STRICT scaling and spacing.
  */
 export function PureGlassShapes() {
   const envato = useGLTF('models/envato_shapes.glb');
@@ -68,7 +69,6 @@ export function PureGlassShapes() {
   
   const uniqueMeshes = useMemo(() => {
     const meshes: THREE.Mesh[] = [];
-    
     const extract = (scene: THREE.Group) => {
       scene.traverse((child) => {
         if ((child as THREE.Mesh).isMesh && meshes.length < 12) {
@@ -78,30 +78,32 @@ export function PureGlassShapes() {
         }
       });
     };
-
     extract(envato.scene);
     extract(glass.scene);
     return meshes;
   }, [envato, glass]);
 
   const shapes = useMemo(() => {
+    const vibrantPalette = ['#00F2FF', '#FF7F00', '#32FF00', '#FF00FF', '#FFD700', '#007FFF'];
     const startY = 8; 
     const spacing = 18;
 
     return uniqueMeshes.map((mesh, i) => {
-      const leftRight = [1, -1, 1, 1, -1, -1, 1, -1];
-      const side = leftRight[i % leftRight.length];
+      const sides = [1, -1, 1, -1, 1, -1, 1, -1];
+      const side = sides[i % sides.length];
       
-      const xPos = (36 + (i * 2) % 12) * side; 
+      // Fixed: Pushing further to the sides (min 35 units) and removing massive scales
+      const xPos = (35 + (i * 3) % 15) * side; 
       const yPos = startY - (i * spacing); 
       const zPos = -28; 
       
-      const sizes = [1.8, 3.5, 6.0, 2.5, 4.5, 2.0, 5.0, 3.0];
+      const sizes = [0.4, 0.7, 0.5, 0.8, 0.3, 0.6, 0.4, 0.7];
       const scale = sizes[i % sizes.length];
 
       return {
         id: mesh.uuid + i,
         mesh,
+        color: vibrantPalette[i % vibrantPalette.length],
         position: [xPos, yPos, zPos] as [number, number, number],
         scale: scale, 
         speed: 0.2 + (i * 0.05),
@@ -115,10 +117,11 @@ export function PureGlassShapes() {
   return (
     <group>
       {shapes.map((s) => (
-        <SingleGlassShape 
+        <SingleVibrantShape 
           key={s.id} 
           index={0} 
           mesh={s.mesh}
+          color={s.color}
           position={s.position} 
           scale={s.scale} 
           speed={s.speed}

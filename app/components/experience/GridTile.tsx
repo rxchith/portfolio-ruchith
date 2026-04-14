@@ -132,10 +132,11 @@ const GridTile = (props: GridTileProps) => {
     maxWidth: 2,
     anchorX: 'center',
     anchorY: 'bottom',
-    fontSize: 0.7,
+    fontSize: 0.8,
     color: 'white',
     textAlign: textAlign,
     fillOpacity: 0,
+    letterSpacing: -0.05,
   };
 
   const onPointerOver = () => {

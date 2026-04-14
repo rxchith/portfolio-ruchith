@@ -7,7 +7,6 @@ import gsap from "gsap";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 
-import AwwardsBadge from "./AwwardsBadge";
 import Preloader from "./Preloader";
 import ProgressLoader from "./ProgressLoader";
 import { ScrollHint } from "./ScrollHint";
@@ -16,35 +15,30 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
   const ref= useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { progress } = useProgress();
+  
   const [canvasStyle, setCanvasStyle] = useState<React.CSSProperties>({
-    position: "absolute",
+    position: "fixed",
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    opacity: 0,
-    overflow: "hidden",
+    opacity: 1,
+    zIndex: 0
   });
 
   useEffect(() => {
     if (!isMobile) {
-      const borderStyle = {
+      setCanvasStyle(prev => ({
+        ...prev,
         inset: '1.5rem',
         width: 'calc(100% - 3rem)',
         height: 'calc(100% - 3rem)',
-      };
-      setCanvasStyle({ ...canvasStyle, ...borderStyle})
+      }));
     }
   }, [isMobile]);
 
   useGSAP(() => {
-    if (progress === 100) {
-      gsap.to('.base-canvas', { opacity: 1, duration: 2, delay: 0.5 });
-    }
-  }, [progress]);
-
-  useGSAP(() => {
-    // Hyper-Object background: Clean, dark charcoal/black
+    // Restore clean, solid dark background
     gsap.to(ref.current, {
       backgroundColor: '#0a0a0a',
       duration: 1,
@@ -56,37 +50,34 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <div className="h-[100dvh] wrapper relative overflow-hidden bg-[#0a0a0a]">
-       {/* Subtle vignette overlay */}
-      <div className="absolute inset-0 z-10 pointer-events-none vignette-overlay"></div>
-      
-      <div className="h-[100dvh] relative" ref={ref}>
-        <Canvas className="base-canvas"
-          shadows
-          style={canvasStyle}
-          ref={canvasRef}
-          dpr={[1, 2]}
-          gl={{ antialias: true, toneMapping: 3, toneMappingExposure: 1 }}
-        >
-          <Suspense fallback={null}>
-            <ambientLight intensity={0.2} />
-            
-            {/* Environment map for realistic object textures */}
-            <Environment preset="city" />
+    <div className="relative min-h-[400vh] w-full bg-[#0a0a0a]" ref={ref}>
+      <Canvas className="base-canvas"
+        shadows
+        style={canvasStyle}
+        ref={canvasRef}
+        dpr={[1, 2]}
+        gl={{ antialias: true, toneMapping: 3, toneMappingExposure: 1.2 }}
+      >
+        <Suspense fallback={null}>
+          <ambientLight intensity={1.5} />
+          <pointLight position={[10, 10, 10]} intensity={50} />
+          <Environment preset="night" />
 
-            <ScrollControls pages={4} damping={0.4} maxSpeed={1} distance={1} style={{ zIndex: 1 }}>
-              {props.children}
-              <Preloader />
-            </ScrollControls>
+          <ScrollControls pages={6} damping={0.2} style={{ zIndex: 10 }}>
+            {props.children}
+            <Preloader />
+          </ScrollControls>
 
-            <Preload all />
-          </Suspense>
-          <AdaptiveDpr pixelated/>
-        </Canvas>
-        <ProgressLoader progress={progress} />
-      </div>
-      <AwwardsBadge />
+          <Preload all />
+        </Suspense>
+        <AdaptiveDpr pixelated/>
+      </Canvas>
+
+      <ProgressLoader progress={progress} />
       <ScrollHint />
+      
+      {/* Subtle vignette overlay */}
+      <div className="fixed inset-0 pointer-events-none z-[1] bg-[radial-gradient(circle,transparent_40%,rgba(0,0,0,0.6)_110%)]"></div>
     </div>
   );
 };
