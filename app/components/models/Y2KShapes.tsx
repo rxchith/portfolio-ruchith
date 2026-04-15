@@ -74,20 +74,16 @@ export function ScatteredShapes() {
   }, [scene]);
 
   const shapes = useMemo(() => {
-    const startY = 20;
-    const spacing = 40; // Increased significantly to prevent crowding at the bottom
-
     return uniqueMeshes.map((mesh, i) => {
-      const leftRight = [1, -1, 1, 1, -1, -1, 1, -1];
-      const side = leftRight[i % leftRight.length];
+      const sides = [1, -1, 1, 1, -1, -1, 1, -1];
+      const side = sides[i % sides.length];
       
-      const xPos = (30 + (i * 2) % 10) * side; 
-      const yPos = startY - (i * spacing); 
-      const zPos = -15; // Slightly deeper to allow larger scales without covering text
+      const xPos = (25 + (i * 8)) * side; 
+      const yPos = 20 - (i * 10); 
+      const zPos = -30 - (i % 2) * 10; 
       
-      // Increased scales (previous min 0.8, now min 4.0)
-      const sizes = [4.5, 6.0, 4.0, 7.5, 5.0, 6.5, 4.2, 5.5];
-      const scale = sizes[i % sizes.length];
+      const sizes = [3.5, 5.0, 3.0, 6.5, 4.0, 5.5, 3.2, 4.5];
+      const scale = sizes[i % sizes.length] * 0.8;
 
       return {
         id: mesh.uuid + i,
@@ -99,6 +95,8 @@ export function ScatteredShapes() {
       };
     });
   }, [uniqueMeshes]);
+
+
 
   if (uniqueMeshes.length === 0) return null;
 

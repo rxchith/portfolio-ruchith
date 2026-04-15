@@ -38,25 +38,25 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
   }, [isMobile]);
 
   useGSAP(() => {
-    // Restore clean, solid dark background
+    // Reveal the behind-canvas background elements
     gsap.to(ref.current, {
-      backgroundColor: '#0a0a0a',
+      backgroundColor: 'transparent',
       duration: 1,
     });
     gsap.to(canvasRef.current, {
-      backgroundColor: '#0a0a0a',
+      backgroundColor: 'transparent',
       duration: 1,
     });
   }, []);
 
   return (
-    <div className="relative min-h-[400vh] w-full bg-[#0a0a0a]" ref={ref}>
+    <div className="relative min-h-[400vh] w-full bg-transparent" ref={ref}>
       <Canvas className="base-canvas"
         shadows
         style={canvasStyle}
         ref={canvasRef}
         dpr={[1, 2]}
-        gl={{ antialias: true, toneMapping: 3, toneMappingExposure: 1.2 }}
+        gl={{ antialias: true, alpha: true, toneMapping: 3, toneMappingExposure: 1.2 }}
       >
         <Suspense fallback={null}>
           <ambientLight intensity={1.5} />
@@ -81,5 +81,6 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
     </div>
   );
 };
+
 
 export default CanvasLoader;

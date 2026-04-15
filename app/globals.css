@@ -52,22 +52,16 @@ h1, h2, h3, .agoma-title {
   background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.6) 100%);
 }
 
-:root {
-  --scrollbarColor: rgba(255, 255, 255, 0.2);
-  --scrollbarBackground: rgba(0, 0, 0, 0);
-}
-
+/* Hide Scrollbar while keeping functionality */
 ::-webkit-scrollbar {
-  width: 3px;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--scrollbarBackground);
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
 }
-::-webkit-scrollbar-thumb {
-  border-bottom: 100vh solid var(--scrollbarColor);
-  border-radius: 4px;
-}
+
 
 .close {
   position: absolute;

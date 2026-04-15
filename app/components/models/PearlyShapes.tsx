@@ -80,25 +80,19 @@ export function PearlyShapes() {
 
   const shapes = useMemo(() => {
     const vibrantPalette = ['#FF1DCE', '#00F5FF', '#76FF03', '#FFD600', '#6200EA', '#FF3D00', '#1DE9B6'];
-    const startY = 14; 
-    const spacing = 35; // increased to spread them out more
 
     return uniqueMeshes.map((mesh, i) => {
       const sides = [-1, 1, -1, 1, -1, 1, -1, 1];
       const side = sides[i % sides.length];
       
-      // Fixed: Pushing further to the sides (min 30 units)
-      const xPos = (30 + (i * 2) % 10) * side; 
-      // Explicitly set first 3 positions to be visible in the Hero section (Y between 2 and -2)
-      const yPos = i < 3 ? (2 - i * 2) : startY - (i * spacing); 
-      // Shift first 3 shapes closer to the camera for the hero section
-      const zPos = i < 3 ? -8 : -22; 
+      // Pushed way further out and spread vertically
+      const xPos = (15 + (i * 6)) * side; 
+      const yPos = 12 - (i * 7); 
+      const zPos = -15 - (i % 3) * 5; 
       
-      // Even larger scales (min 1.5 instead of 0.8)
-      // Boost scale for the first 3 hero shapes
-      const sizes = [2.0, 2.8, 1.8, 3.2, 1.5, 2.5, 1.8, 3.0];
-      let scale = sizes[i % sizes.length];
-      if (i < 3) scale *= 1.5;
+      const sizes = [1.5, 1.8, 1.2, 2.0, 1.3, 1.6, 1.4, 2.0];
+      const scale = sizes[i % sizes.length] * 0.9;
+
       
       return {
         id: mesh.uuid + i,
@@ -111,6 +105,8 @@ export function PearlyShapes() {
       };
     });
   }, [uniqueMeshes]);
+
+
 
   if (uniqueMeshes.length === 0) return null;
 
