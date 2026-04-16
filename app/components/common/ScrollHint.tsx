@@ -1,6 +1,7 @@
 import gsap from "gsap";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { getPath } from "../../utils/getPath";
 
 import { usePortalStore, useScrollStore } from "@stores";
 
@@ -46,7 +47,7 @@ export const ScrollHint = () => {
     }
   }, [showScrollHint]);
 
-  const svgSrc = hintText === 'PAN' ? 'icons/chevrons-left-right.svg' : 'icons/chevrons-up-down.svg';
+  const svgSrc = getPath(hintText === 'PAN' ? 'icons/chevrons-left-right.svg' : 'icons/chevrons-up-down.svg');
 
   return (
     <div className="fixed w-full bottom-5 scroll-hint" style={{ opacity: 0 }}>

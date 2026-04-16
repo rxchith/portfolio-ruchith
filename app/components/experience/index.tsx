@@ -4,6 +4,7 @@ import { usePortalStore } from "@stores";
 import { useRef } from "react";
 import { isMobile } from "react-device-detect";
 import * as THREE from 'three';
+import { getPath } from "../../utils/getPath";
 import GridTile from "./GridTile";
 import Projects from "./projects";
 import Work from "./work";
@@ -15,7 +16,7 @@ const Experience = () => {
   const isActive = usePortalStore((state) => !!state.activePortalId);
 
   const fontProps = {
-    font: "./soria-font.ttf",
+    font: getPath("soria-font.ttf"),
     fontSize: 0.4,
     color: 'white',
   };
@@ -63,14 +64,14 @@ const Experience = () => {
           <GridTile title='WORK AND EDUCATION'
             id="work"
             textAlign='left'
-            thumbnail="/thumbnails/work.png"
+            thumbnail={getPath("/thumbnails/work.png")}
             position={new THREE.Vector3(isMobile ? -1 : -2, 0, isMobile ? 0.4 : 0)}>
             <Work/>
           </GridTile>
           <GridTile title='SIDE PROJECTS'
             id="projects"
             textAlign='right'
-            thumbnail="/thumbnails/projects.png"
+            thumbnail={getPath("/thumbnails/projects.png")}
             position={new THREE.Vector3(isMobile ? 1 : 2, 0, 0)}>
             <Projects/>
           </GridTile>

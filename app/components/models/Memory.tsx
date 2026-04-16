@@ -10,6 +10,7 @@ Title: Dali,The Persistence of Memory
 
 import * as THREE from 'three'
 import React, { JSX } from 'react'
+import { getPath } from "../../utils/getPath";
 import { useGLTF } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 
@@ -37,7 +38,7 @@ type GLTFResult = GLTF & {
 }
 
 export function Memory(props: JSX.IntrinsicElements['group']) {
-  const { nodes, materials } = useGLTF('models/dalithe_persistence_of_memory.glb') as GLTFResult
+  const { nodes, materials } = useGLTF(getPath('models/dalithe_persistence_of_memory.glb')) as GLTFResult
   return (
     <group {...props} dispose={null}>
       <mesh castShadow receiveShadow geometry={nodes['Extract2_04_-_Default_0'].geometry} material={materials['04_-_Default']} scale={0.021} />
@@ -52,5 +53,5 @@ export function Memory(props: JSX.IntrinsicElements['group']) {
   )
 }
 
-useGLTF.preload('models/dalithe_persistence_of_memory.glb')
+useGLTF.preload(getPath('models/dalithe_persistence_of_memory.glb'));
 

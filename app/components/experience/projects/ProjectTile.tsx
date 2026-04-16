@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import * as THREE from "three";
 
+import { getPath } from "../../../utils/getPath";
 import { usePortalStore } from "@stores";
 import { Project } from "@types";
 
@@ -24,13 +25,13 @@ const ProjectTile = ({ project, index, position, rotation, activeId, onClick }: 
   const isProjectSectionActive = usePortalStore((state) => state.activePortalId === "projects");
 
   const titleProps = useMemo(() => ({
-    font: "./soria-font.ttf",
+    font: getPath("soria-font.ttf"),
     color: "white",
     letterSpacing: -0.05,
   }), []);
 
   const subtitleProps: Partial<TextProps> = useMemo(() => ({
-    font: "./Vercetti-Regular.woff",
+    font: getPath("Vercetti-Regular.woff"),
     color: "rgba(255,255,255,0.7)",
     anchorX: "left",
     anchorY: "top",
@@ -98,7 +99,7 @@ const ProjectTile = ({ project, index, position, rotation, activeId, onClick }: 
         {project.image && (
           /* eslint-disable-next-line jsx-a11y/alt-text */
           <Image
-            url={project.image}
+            url={getPath(project.image)}
             scale={[4.2, 5.8] as [number, number]}
             zoom={1}
             transparent

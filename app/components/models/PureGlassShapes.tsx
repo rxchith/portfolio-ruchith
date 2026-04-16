@@ -1,5 +1,6 @@
 'use client';
 
+import { getPath } from "../../utils/getPath";
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
@@ -64,8 +65,8 @@ function SingleVibrantShape({ index, mesh, color, speed = 1, ...props }: Interna
  * PureGlassShapes — Vibrant Clay/Plastic Shapes with STRICT scaling and spacing.
  */
 export function PureGlassShapes() {
-  const envato = useGLTF('models/envato_shapes.glb');
-  const glass = useGLTF('models/glass_shapes.glb');
+  const envato = useGLTF(getPath('models/envato_shapes.glb'));
+  const glass = useGLTF(getPath('models/glass_shapes.glb'));
   
   const uniqueMeshes = useMemo(() => {
     const meshes: THREE.Mesh[] = [];
@@ -131,5 +132,5 @@ export function PureGlassShapes() {
   );
 }
 
-useGLTF.preload('models/envato_shapes.glb');
-useGLTF.preload('models/glass_shapes.glb');
+useGLTF.preload(getPath('models/envato_shapes.glb'));
+useGLTF.preload(getPath('models/glass_shapes.glb'));

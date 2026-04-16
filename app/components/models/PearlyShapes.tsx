@@ -1,5 +1,6 @@
 'use client';
 
+import { getPath } from "../../utils/getPath";
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
@@ -64,7 +65,7 @@ function SingleVibrantPearlyShape({ index, mesh, color, speed = 1, ...props }: I
  * PearlyShapes — Vibrant High-Intensity shapes with STRICT scale control.
  */
 export function PearlyShapes() {
-  const { scene } = useGLTF('models/glossy_shapes.glb');
+  const { scene } = useGLTF(getPath('models/glossy_shapes.glb'));
   
   const uniqueMeshes = useMemo(() => {
     const meshes: THREE.Mesh[] = [];
@@ -128,4 +129,4 @@ export function PearlyShapes() {
   );
 }
 
-useGLTF.preload('models/glossy_shapes.glb');
+useGLTF.preload(getPath('models/glossy_shapes.glb'));

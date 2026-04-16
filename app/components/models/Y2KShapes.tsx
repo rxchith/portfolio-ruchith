@@ -1,5 +1,6 @@
 'use client';
 
+import { getPath } from "../../utils/getPath";
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
@@ -59,7 +60,7 @@ export function SingleY2KShape({ index, mesh, speed = 1, ...props }: InternalSha
  * ScatteredShapes — Spreads unique shapes with DETERMINISTIC layout for full control.
  */
 export function ScatteredShapes() {
-  const { scene } = useGLTF('models/y2k_shapes.glb');
+  const { scene } = useGLTF(getPath('models/y2k_shapes.glb'));
   
   const uniqueMeshes = useMemo(() => {
     const meshes: THREE.Mesh[] = [];
@@ -117,4 +118,4 @@ export function ScatteredShapes() {
   );
 }
 
-useGLTF.preload('models/y2k_shapes.glb');
+useGLTF.preload(getPath('models/y2k_shapes.glb'));

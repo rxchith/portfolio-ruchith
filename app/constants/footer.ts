@@ -1,34 +1,35 @@
+import { getPath } from "../utils/getPath";
 import { FooterLink } from "../types";
 
 export const FOOTER_LINKS: FooterLink[] = [
   {
     name: 'LinkedIn',
     hoverText: 'Connect with me',
-    icon: 'icons/linkedin.svg',
+    icon: getPath('icons/linkedin.svg'),
     url: 'https://www.linkedin.com/in/mohit-virli-4780b6112/',
   },
   {
     name: 'Behance',
     hoverText: 'Full Portfolio',
-    icon: 'icons/behance.svg',
+    icon: getPath('icons/behance.svg'),
     url: 'https://www.behance.net/ruchithramesh/projects',
   },
   {
     name: 'Spotify',
     hoverText: 'Curated playlists',
-    icon: 'icons/spotify.svg',
+    icon: getPath('icons/spotify.svg'),
     url: 'https://open.spotify.com/user/21hr4w2hzp4ceidewwsb4bxoy',
   },
   {
     name: 'Instagram',
     hoverText: '@clevirli',
-    icon: 'icons/instagram.svg',
+    icon: getPath('icons/instagram.svg'),
     url: 'https://www.instagram.com/clevirli/',
   },
   {
     name: 'Resume',
     hoverText: 'Download',
-    icon: 'icons/file.svg',
-    url: './Ruchith - Resume.pdf',
+    icon: getPath('icons/file.svg'),
+    url: getPath('Ruchith - Resume.pdf'),
   }
 ];

@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import * as THREE from "three";
+import { getPath } from "../../../utils/getPath";
 
 import { WORK_TIMELINE } from "@constants";
 import { WorkTimelinePoint } from "@types";
@@ -24,7 +25,7 @@ const TimelinePoint = ({ point, diff }: { point: WorkTimelinePoint, diff: number
   const textAlign = point.position === 'left' ? 'right' : 'left';
 
   const textProps: Partial<TextProps> = useMemo(() => ({
-    font: "/Vercetti-Regular.woff",
+    font: getPath("/Vercetti-Regular.woff"),
     color: "white",
     anchorX: textAlign,
     fillOpacity: 2 - 2 * diff,
@@ -32,7 +33,7 @@ const TimelinePoint = ({ point, diff }: { point: WorkTimelinePoint, diff: number
 
   const titleProps = useMemo(() => ({
     ...textProps,
-    font: "/soria-font.ttf",
+    font: getPath("/soria-font.ttf"),
     fontSize: 0.6,
     maxWidth: 3,
   }), [textProps]);

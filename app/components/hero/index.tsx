@@ -10,6 +10,7 @@ import WindowModel from "../models/WindowModel";
 import TextWindow from "./TextWindow";
 import TextPressure from "../common/TextPressure";
 import { usePortalStore } from "@stores";
+import { getPath } from "../../utils/getPath";
 
 /**
  * FloatingIcon — A smaller, vibrant element that frames the text.
@@ -57,7 +58,7 @@ function FloatingIcon({ mesh, color, position, rotationSpeed = 1 }: { mesh: THRE
 const Hero = () => {
   const titleContainerRef = useRef<THREE.Group>(null);
   const { progress } = useProgress();
-  const { scene: glossyScene } = useGLTF('models/glossy_shapes.glb');
+  const { scene: glossyScene } = useGLTF(getPath('models/glossy_shapes.glb'));
   const uiPortalNode = usePortalStore(state => state.uiPortalNode);
   
   const heroMeshes = useMemo(() => {
@@ -90,7 +91,7 @@ const Hero = () => {
         {/* Subtitle (Top) */}
         <Text 
           position={[0, 2.2, 0]} 
-          font="/soria-font.ttf" 
+          font={getPath("soria-font.ttf")} 
           fontSize={0.45} 
           color="#ffffff" 
           letterSpacing={0.5} 
