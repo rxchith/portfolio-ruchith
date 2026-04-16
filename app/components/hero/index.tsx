@@ -1,6 +1,6 @@
 'use client';
 
-import { Text, useGLTF } from "@react-three/drei";
+import { Text, useGLTF, Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useProgress } from "@react-three/drei";
 import gsap from "gsap";
@@ -8,6 +8,8 @@ import { useEffect, useRef, useMemo } from "react";
 import * as THREE from "three";
 import WindowModel from "../models/WindowModel";
 import TextWindow from "./TextWindow";
+import TextPressure from "../common/TextPressure";
+import { usePortalStore } from "@stores";
 
 /**
  * FloatingIcon — A smaller, vibrant element that frames the text.
@@ -53,9 +55,10 @@ function FloatingIcon({ mesh, color, position, rotationSpeed = 1 }: { mesh: THRE
 }
 
 const Hero = () => {
-  const titleRef = useRef<THREE.Mesh>(null);
+  const titleContainerRef = useRef<THREE.Group>(null);
   const { progress } = useProgress();
   const { scene: glossyScene } = useGLTF('models/glossy_shapes.glb');
+  const uiPortalNode = usePortalStore(state => state.uiPortalNode);
   
   const heroMeshes = useMemo(() => {
     const meshes: THREE.Mesh[] = [];
@@ -68,13 +71,14 @@ const Hero = () => {
   }, [glossyScene]);
 
   useEffect(() => {
-    if (progress === 100 && titleRef.current) {
-      gsap.fromTo(titleRef.current.position, {
+    if (progress === 100 && titleContainerRef.current) {
+      gsap.fromTo(titleContainerRef.current.position, {
         y: -10,
         duration: 1,
       }, {
         y: 2,
-        duration: 3
+        duration: 3,
+        ease: "power3.out"
       });
     }
   }, [progress]);
@@ -82,8 +86,34 @@ const Hero = () => {
 
   return (
     <>
-      <Text position={[0, 3.8, -10]} font="/soria-font.ttf" fontSize={0.22} color="#ffffff" letterSpacing={0.5} textAlign="center">NEAT & CONTEMPORARY</Text>
-      <Text position={[0, 1.8, -10]} font="/soria-font.ttf" fontSize={3.2} color="#ffffff" letterSpacing={-0.05} ref={titleRef}>Ruchith</Text>
+      <group ref={titleContainerRef} position={[0, 2, -10]}>
+        {/* Subtitle (Top) */}
+        <Text 
+          position={[0, 2.2, 0]} 
+          font="/soria-font.ttf" 
+          fontSize={0.45} 
+          color="#ffffff" 
+          letterSpacing={0.5} 
+          textAlign="center"
+        >
+          HI, I AM
+        </Text>
+
+        {/* Main Title (Bottom) */}
+        <group position={[0, -0.8, 0]}>
+          <Html 
+            center 
+            transform 
+            distanceFactor={10} 
+            portal={{ current: uiPortalNode }}
+          >
+            <TextPressure 
+              text="Ruchith" 
+              className="text-[120px] font-black uppercase tracking-tighter text-white"
+            />
+          </Html>
+        </group>
+      </group>
       
       {/* Decorative center shapes to fill the "blank area" */}
       {heroMeshes.length >= 2 && (

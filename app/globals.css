@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Hubot Sans';
+  src: url('https://cdn.jsdelivr.net/gh/github/hubot-sans@main/packages/hubot-sans/dist/Hubot-Sans.woff2') format('woff2');
+  font-weight: 200 900;
+  font-stretch: 75% 125%;
+  font-style: normal italic;
+}
+
+
 :root {
   --background: #0a0a0a;
   --foreground: #ffffff;
@@ -64,13 +73,14 @@ h1, h2, h3, .agoma-title {
 
 
 .close {
-  position: absolute;
+  position: fixed;
   left: 32px;
   top: 32px;
   width: 48px;
   height: 48px;
-  opacity: 0.6;
+  opacity: 0.8;
   cursor: pointer;
+  z-index: 150;
 }
 
 @media screen and (max-width: 768px) {
@@ -123,3 +133,12 @@ h1, h2, h3, .agoma-title {
 }
 
 .pt-logo span { color: var(--accent); }
+
+/* Journey Timeline scroll container */
+.journey-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+.journey-scroll-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

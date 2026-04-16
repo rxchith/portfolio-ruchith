@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 
+import { usePortalStore } from "@stores";
 import Preloader from "./Preloader";
 import ProgressLoader from "./ProgressLoader";
 import { ScrollHint } from "./ScrollHint";
@@ -15,6 +16,7 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
   const ref= useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { progress } = useProgress();
+  const setUiPortalNode = usePortalStore(state => state.setUiPortalNode);
   
   const [canvasStyle, setCanvasStyle] = useState<React.CSSProperties>({
     position: "fixed",
@@ -49,8 +51,13 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
     });
   }, []);
 
+
   return (
     <div className="relative min-h-[400vh] w-full bg-transparent" ref={ref}>
+      <div 
+        ref={setUiPortalNode} 
+        className="fixed inset-0 pointer-events-none z-[5]"
+      />
       <Canvas className="base-canvas"
         shadows
         style={canvasStyle}
@@ -63,6 +70,7 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
           <pointLight position={[10, 10, 10]} intensity={50} />
           <Environment preset="night" />
 
+          {/* Pass the portal node to children if they need it */}
           <ScrollControls pages={6} damping={0.2} style={{ zIndex: 10 }}>
             {props.children}
             <Preloader />

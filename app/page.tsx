@@ -1,5 +1,7 @@
 'use client';
 
+import { usePortalStore } from "@stores";
+import { useState, useEffect, useRef, useCallback } from "react";
 import CanvasLoader from "./components/common/CanvasLoader";
 import ScrollWrapper from "./components/common/ScrollWrapper";
 import Experience from "./components/experience";
@@ -9,12 +11,46 @@ import { PearlyShapes } from "./components/models/PearlyShapes";
 import { PureGlassShapes } from "./components/models/PureGlassShapes";
 import { ScatteredShapes } from "./components/models/Y2KShapes";
 import GradientBlinds from "./components/backgrounds/GradientBlinds";
+import ForceFieldBackground from "./components/experience/projects/ForceFieldBackground";
+import JourneyTimeline from "./components/experience/work/JourneyTimeline";
+import PlasmaBackground from "./components/experience/work/PlasmaBackground";
 
 const Home = () => {
+  const activePortalId = usePortalStore((state) => state.activePortalId);
+  const isPortalActive = !!activePortalId;
+  const isProjectsActive = activePortalId === "projects";
+  const isWorkActive = activePortalId === "work";
+
+  // Scroll data for the journey timeline
+  const [scrollData, setScrollData] = useState({ scrollTop: 0, viewportHeight: 0 });
+  const journeyScrollRef = useRef<HTMLDivElement>(null);
+
+  const handleJourneyScroll = useCallback(() => {
+    const el = journeyScrollRef.current;
+    if (!el) return;
+    setScrollData({ 
+      scrollTop: el.scrollTop, 
+      viewportHeight: el.clientHeight 
+    });
+  }, []);
+
+  // Reset scroll data when portal closes
+  useEffect(() => {
+    if (!isWorkActive) {
+      setScrollData({ scrollTop: 0, viewportHeight: 0 });
+      if (journeyScrollRef.current) {
+        journeyScrollRef.current.scrollTop = 0;
+      }
+    }
+  }, [isWorkActive]);
+
   return (
     <main className="min-h-screen relative bg-[#0a0a0a]">
-      {/* Dynamic WebGL Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      {/* Dynamic WebGL Background — hides when inside a portal */}
+      <div 
+        className="fixed inset-0 z-0 pointer-events-none transition-opacity duration-1000"
+        style={{ opacity: isPortalActive ? 0 : 1 }}
+      >
         <GradientBlinds
           gradientColors={['#0a0a0a', '#0d0d0f', '#121214', '#0a0a0a', '#1a1b1e']}
           angle={-20}
@@ -29,6 +65,83 @@ const Home = () => {
         />
       </div>
 
+      {/* Force Field Background — shows only when projects portal is active */}
+      <div
+        className="fixed inset-0 z-0 transition-opacity duration-1000"
+        style={{ 
+          opacity: isProjectsActive ? 1 : 0, 
+          pointerEvents: isProjectsActive ? 'auto' : 'none' 
+        }}
+      >
+        {isProjectsActive && (
+          <ForceFieldBackground
+            hue={220}
+            saturation={5}
+            spacing={10}
+            forceStrength={15}
+            magnifierRadius={200}
+            restoreSpeed={0.03}
+            density={0.3}
+            minStroke={1.5}
+            maxStroke={4}
+          />
+        )}
+      </div>
+
+      {/* Plasma Background — shows only when work portal is active */}
+      <div
+        className="fixed inset-0 z-0 transition-opacity duration-1000"
+        style={{
+          opacity: isWorkActive ? 1 : 0,
+          pointerEvents: isWorkActive ? 'auto' : 'none',
+        }}
+      >
+        {isWorkActive && (
+          <PlasmaBackground
+            color="#888888"
+            speed={0.5}
+            direction="forward"
+            scale={1.2}
+            opacity={0.6}
+            mouseInteractive={true}
+          />
+        )}
+      </div>
+
+      {/* Journey Timeline Overlay — shows on top of tubes when work portal is active */}
+      <div
+        className="fixed inset-0 z-[6] transition-opacity duration-700"
+        style={{
+          opacity: isWorkActive ? 1 : 0,
+          pointerEvents: isWorkActive ? 'auto' : 'none',
+        }}
+      >
+        <div
+          ref={journeyScrollRef}
+          onScroll={handleJourneyScroll}
+          className="journey-scroll-container"
+          style={{
+            width: '100%',
+            height: '100%',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+          }}
+        >
+          {/* Top spacer */}
+          <div style={{ height: '35vh' }} />
+
+          {/* SVG Journey Timeline */}
+          <div style={{ padding: '0 20px', maxWidth: 700, margin: '0 auto' }}>
+            <JourneyTimeline 
+              scrollTop={scrollData.scrollTop} 
+              viewportHeight={scrollData.viewportHeight} 
+            />
+          </div>
+
+          {/* Bottom spacer */}
+          <div style={{ height: '65vh' }} />
+        </div>
+      </div>
 
       {/* Interactive 3D Canvas Context */}
       <CanvasLoader>
@@ -50,4 +163,3 @@ const Home = () => {
 };
 
 export default Home;
-

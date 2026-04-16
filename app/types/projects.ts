@@ -8,5 +8,6 @@ export interface Project {
   date: string;
   subtext: string;
   url?: string;
+  image?: string;
   urls?: ProjectUrl[];
 }
