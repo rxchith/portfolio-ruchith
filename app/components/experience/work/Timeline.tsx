@@ -24,7 +24,7 @@ const TimelinePoint = ({ point, diff }: { point: WorkTimelinePoint, diff: number
   const textAlign = point.position === 'left' ? 'right' : 'left';
 
   const textProps: Partial<TextProps> = useMemo(() => ({
-    font: "./Vercetti-Regular.woff",
+    font: "/Vercetti-Regular.woff",
     color: "white",
     anchorX: textAlign,
     fillOpacity: 2 - 2 * diff,
@@ -32,10 +32,11 @@ const TimelinePoint = ({ point, diff }: { point: WorkTimelinePoint, diff: number
 
   const titleProps = useMemo(() => ({
     ...textProps,
-    font: "./soria-font.ttf",
+    font: "/soria-font.ttf",
     fontSize: 0.6,
     maxWidth: 3,
   }), [textProps]);
+
 
   return (
     <group position={point.point} scale={isMobile ? 0.35 : 0.6}>
