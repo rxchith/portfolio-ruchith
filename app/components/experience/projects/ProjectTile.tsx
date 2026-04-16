@@ -95,7 +95,6 @@ const ProjectTile = ({ project, index, position, rotation, activeId }: ProjectTi
       <group ref={projectRef}>
         {project.image && (
           <Image
-            alt={project.title}
             url={project.image}
             scale={[4.2, 5.8] as [number, number]}
             zoom={1}
