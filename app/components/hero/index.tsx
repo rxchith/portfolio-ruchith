@@ -101,17 +101,19 @@ const Hero = () => {
 
         {/* Main Title (Bottom) */}
         <group position={[0, -0.8, 0]}>
-          <Html 
-            center 
-            transform 
-            distanceFactor={10} 
-            portal={{ current: uiPortalNode }}
-          >
-            <TextPressure 
-              text="Ruchith" 
-              className="text-[120px] font-black uppercase tracking-tighter text-white"
-            />
-          </Html>
+          {uiPortalNode && (
+            <Html 
+              center 
+              transform 
+              distanceFactor={10} 
+              portal={{ current: uiPortalNode as HTMLElement }}
+            >
+              <TextPressure 
+                text="Ruchith" 
+                className="text-[120px] font-black uppercase tracking-tighter text-white"
+              />
+            </Html>
+          )}
         </group>
       </group>
       
