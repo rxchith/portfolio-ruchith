@@ -53,12 +53,8 @@ export const TextPressure: React.FC<TextPressureProps> = ({
 
           const proximity = Math.max(0, 1 - distance / maxDistance);
 
-          const wght = minWeight + (maxWeight - minWeight) * proximity;
-          const wdth = minWidth + (maxWidth - minWidth) * proximity;
-          const ital = minItal + (maxItal - minItal) * proximity;
-
-          char.style.fontVariationSettings = `'wght' ${wght}, 'wdth' ${wdth}, 'ital' ${ital}`;
-          char.style.transform = `scale(${1 + proximity * 0.1})`;
+          // Proximity scaling (kept for character interaction)
+          char.style.transform = `scale(${1 + proximity * 0.15})`;
         });
       }
       rafId = requestAnimationFrame(update);
@@ -75,9 +71,9 @@ export const TextPressure: React.FC<TextPressureProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`flex flex-wrap justify-center items-center ${className}`}
+      className={`flex flex-nowrap justify-center items-center ${className}`}
       style={{
-        fontFamily: "'Hubot Sans', sans-serif",
+        fontFamily: "var(--font-soria), serif",
       }}
     >
       {text.split('').map((char, i) => (

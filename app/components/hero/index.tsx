@@ -119,7 +119,7 @@ const Hero = () => {
             >
               <TextPressure 
                 text="Ruchith" 
-                className={`${isMobile ? 'text-[85px]' : 'text-[120px]'} font-black uppercase tracking-tighter text-white`}
+                className={`${isMobile ? 'text-[72px]' : 'text-[120px]'} tracking-tighter text-white uppercase italic`}
               />
             </Html>
           )}
