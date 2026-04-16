@@ -28,8 +28,8 @@ export const FOOTER_LINKS: FooterLink[] = [
   },
   {
     name: 'Resume',
-    hoverText: 'Download',
+    hoverText: 'Download Resume',
     icon: getPath('icons/file.svg'),
-    url: getPath('Ruchith_Ramesh_Resume.pdf'),
+    url: getPath('resume.pdf'),
   }
 ];
