@@ -8,10 +8,10 @@ export const FOOTER_LINKS: FooterLink[] = [
     url: 'https://www.linkedin.com/in/mohit-virli-4780b6112/',
   },
   {
-    name: 'GitHub',
-    hoverText: 'Open Sourcing',
-    icon: 'icons/github.svg',
-    url: 'https://github.com/mohitvirli',
+    name: 'Behance',
+    hoverText: 'Full Portfolio',
+    icon: 'icons/behance.svg',
+    url: 'https://www.behance.net/ruchithramesh/projects',
   },
   {
     name: 'Spotify',
