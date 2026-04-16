@@ -203,7 +203,8 @@ const GridTile = (props: GridTileProps) => {
       </mesh>
 
       {/* 2. Overlays (Thumbnails, Titles, Hover Decorations) */}
-      <group pointerEvents="none">
+      {/* @ts-ignore - disable raycasting on overlay group */}
+      <group raycast={() => null}>
         {/* Thumbnail: slightly in front of portal to prevent Z-fighting */}
         <mesh ref={thumbnailRef} position={[0, 0, 0.05]}>
           { getGeometry() }
