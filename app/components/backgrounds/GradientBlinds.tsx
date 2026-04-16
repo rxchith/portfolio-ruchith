@@ -330,8 +330,7 @@ void main() {
         container.removeChild(canvas);
       }
 
-      
-      const cleanup = (obj: { remove?: () => void } | null) => {
+      const cleanup = (obj: any) => {
         if (obj && typeof obj.remove === 'function') {
           obj.remove();
         }
@@ -340,12 +339,13 @@ void main() {
       cleanup(programRef.current);
       cleanup(geometryRef.current);
       cleanup(meshRef.current);
-      // renderer.destroy() is not always standard in all versions of OGL
+      
       programRef.current = null;
       geometryRef.current = null;
       meshRef.current = null;
       rendererRef.current = null;
     };
+
 
   }, [
     dpr,
