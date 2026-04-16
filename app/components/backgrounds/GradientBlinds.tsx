@@ -330,17 +330,13 @@ void main() {
         container.removeChild(canvas);
       }
 
-      const cleanup = (obj: unknown) => {
-        if (obj && typeof obj === 'object' && 'remove' in obj && typeof (obj as any).remove === 'function') {
-          (obj as any).remove();
-        }
-      };
+      if (programRef.current) {
+        programRef.current.remove();
+      }
+      if (geometryRef.current) {
+        geometryRef.current.remove();
+      }
 
-      
-      cleanup(programRef.current);
-      cleanup(geometryRef.current);
-      cleanup(meshRef.current);
-      
       programRef.current = null;
       geometryRef.current = null;
       meshRef.current = null;
