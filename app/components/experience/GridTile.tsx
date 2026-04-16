@@ -54,7 +54,6 @@ const GridTile = (props: GridTileProps) => {
   useFrame(() => {
     const d = data.range(0.95, 0.05);
     if (isMobile && titleRef.current) {
-      /* eslint-disable  @typescript-eslint/no-explicit-any */
       (titleRef.current as any).fillOpacity = d;
     }
     

@@ -97,7 +97,7 @@ const ProjectTile = ({ project, index, position, rotation, activeId }: ProjectTi
           <Image
             alt={project.title}
             url={project.image}
-            scale={[4.2, 5.8, 1]}
+            scale={[4.2, 5.8] as [number, number]}
             zoom={1}
             transparent
             grayscale={0}

@@ -33,7 +33,6 @@ const Experience = () => {
       titleRef.current.children.forEach((text, i) => {
         const y =  Math.max(Math.min((1 - d) * (10 - i), 10), 0.5);
         text.position.y = THREE.MathUtils.damp(text.position.y, y, 7, delta);
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
         (text as any).fillOpacity = e;
       });
     }
