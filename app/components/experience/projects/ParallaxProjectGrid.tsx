@@ -35,16 +35,38 @@ const ParallaxProjectGrid = () => {
       setTargetX((prev) => prev - e.deltaX * 0.02); // Slightly faster scaling for horizontal
     };
 
+    // Touch handlers for mobile swiping
+    const handleTouchStart = (e: TouchEvent) => {
+      if (!isActive) return;
+      setIsDragging(true);
+      lastMouseX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging || !isActive) return;
+      const delta = (e.touches[0].clientX - lastMouseX.current) * 0.05;
+      setTargetX((prev) => prev + delta);
+      lastMouseX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = () => setIsDragging(false);
+
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
     window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: false });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
       window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [isActive, isDragging]);
 
@@ -53,6 +75,11 @@ const ParallaxProjectGrid = () => {
   const totalWidth = PROJECTS.length * spacing;
 
   useFrame(() => {
+    if (gridRef.current) {
+      gridRef.current.visible = isActive;
+    }
+    if (!isActive) return;
+
     const lerpSpeed = 0.08;
     currentXRef.current = THREE.MathUtils.lerp(currentXRef.current, targetX, lerpSpeed);
 

@@ -5,6 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import { useProgress } from "@react-three/drei";
 import gsap from "gsap";
 import { useEffect, useRef, useMemo } from "react";
+import { isMobile } from "react-device-detect";
 import * as THREE from "three";
 import WindowModel from "../models/WindowModel";
 import TextWindow from "./TextWindow";
@@ -29,7 +30,7 @@ function FloatingIcon({ mesh, color, position, rotationSpeed = 1 }: { mesh: THRE
     clone.scale.setScalar(1 / radius);
     
     // Scaled up significantly to 1.5 for a bold, intentional look
-    clone.scale.multiplyScalar(1.5);
+    clone.scale.multiplyScalar(isMobile ? 1 : 1.5);
     
     clone.material = new THREE.MeshPhysicalMaterial({
       color: color,
@@ -90,9 +91,9 @@ const Hero = () => {
       <group ref={titleContainerRef} position={[0, 2, -10]}>
         {/* Subtitle (Top) */}
         <Text 
-          position={[0, 2.2, 0]} 
+          position={[0, isMobile ? 1.6 : 2.2, 0]} 
           font={getPath("soria-font.ttf")} 
-          fontSize={0.45} 
+          fontSize={isMobile ? 0.3 : 0.45} 
           color="#ffffff" 
           letterSpacing={0.5} 
           textAlign="center"
@@ -101,17 +102,17 @@ const Hero = () => {
         </Text>
 
         {/* Main Title (Bottom) */}
-        <group position={[0, -0.8, 0]}>
+        <group position={[0, isMobile ? -0.4 : -0.8, 0]}>
           {uiPortalNode && (
             <Html 
               center 
               transform 
-              distanceFactor={10} 
+              distanceFactor={isMobile ? 5 : 10} 
               portal={{ current: uiPortalNode as HTMLElement }}
             >
               <TextPressure 
                 text="Ruchith" 
-                className="text-[120px] font-black uppercase tracking-tighter text-white"
+                className={`${isMobile ? 'text-[60px]' : 'text-[120px]'} font-black uppercase tracking-tighter text-white`}
               />
             </Html>
           )}
@@ -124,13 +125,13 @@ const Hero = () => {
           <FloatingIcon 
             mesh={heroMeshes[0]} 
             color="#00F2FF" 
-            position={[-6.5, 0.5, 0]} 
+            position={[isMobile ? -3.5 : -6.5, 0.5, 0]} 
             rotationSpeed={0.5} 
           />
           <FloatingIcon 
             mesh={heroMeshes[1]} 
             color="#FF7F00" 
-            position={[6.5, -0.5, 0]} 
+            position={[isMobile ? 3.5 : 6.5, -0.5, 0]} 
             rotationSpeed={-0.3} 
           />
         </group>

@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ruchith - Frontend Engineer",
     description: "Frontend engineer by profession, creative at heart.",
-    url: "https://mohitvirli.github.io",
+    url: "https://rxchith.github.io",
     siteName: "Ruchith's Portfolio",
     locale: "en_US",
     type: "website",

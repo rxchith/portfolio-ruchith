@@ -28,16 +28,7 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
     zIndex: 0
   });
 
-  useEffect(() => {
-    if (!isMobile) {
-      setCanvasStyle(prev => ({
-        ...prev,
-        inset: '1.5rem',
-        width: 'calc(100% - 3rem)',
-        height: 'calc(100% - 3rem)',
-      }));
-    }
-  }, [isMobile]);
+
 
   useGSAP(() => {
     // Reveal the behind-canvas background elements
@@ -73,7 +64,6 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
           {/* Pass the portal node to children if they need it */}
           <ScrollControls pages={6} damping={0.2} style={{ zIndex: 10 }}>
             {props.children}
-            <Preloader />
           </ScrollControls>
 
           <Preload all />

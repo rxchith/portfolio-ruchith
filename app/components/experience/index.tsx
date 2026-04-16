@@ -17,7 +17,7 @@ const Experience = () => {
 
   const fontProps = {
     font: getPath("soria-font.ttf"),
-    fontSize: 0.4,
+    fontSize: isMobile ? 0.25 : 0.4,
     color: 'white',
   };
 
@@ -42,7 +42,7 @@ const Experience = () => {
   const getTitle = () => {
     const title = 'experience'.toUpperCase();
     return title.split('').map((char, i) => {
-      const diff = isMobile ? 0.4 : 0.8;
+      const diff = isMobile ? 0.28 : 0.8;
       return (
         <Text key={i} {...fontProps} position={[i * diff, 2, 1]}>{char}</Text>
       );
@@ -56,7 +56,7 @@ const Experience = () => {
         <shadowMaterial opacity={0.1} />
       </mesh> */}
       <group rotation={[0, 0, Math.PI / 2]}>
-        <group ref={titleRef} position={[isMobile ? -1.8 : -3.6, 2, -2]}>
+        <group ref={titleRef} position={[isMobile ? -1.1 : -3.6, 2, -2]}>
           {getTitle()}
         </group>
 
@@ -65,14 +65,14 @@ const Experience = () => {
             id="work"
             textAlign='left'
             thumbnail={getPath("/thumbnails/work.png")}
-            position={new THREE.Vector3(isMobile ? -1 : -2, 0, isMobile ? 0.4 : 0)}>
+            position={new THREE.Vector3(isMobile ? -0.7 : -2, 0, isMobile ? 0.4 : 0)}>
             <Work/>
           </GridTile>
           <GridTile title='SIDE PROJECTS'
             id="projects"
             textAlign='right'
             thumbnail={getPath("/thumbnails/projects.png")}
-            position={new THREE.Vector3(isMobile ? 1 : 2, 0, 0)}>
+            position={new THREE.Vector3(isMobile ? 0.7 : 2, 0, 0)}>
             <Projects/>
           </GridTile>
         </group>

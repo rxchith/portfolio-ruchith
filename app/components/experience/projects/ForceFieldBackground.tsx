@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useCallback } from 'react';
+import { isMobile } from 'react-device-detect';
 
 export interface ForceFieldBackgroundProps {
   hue?: number;
@@ -124,9 +125,15 @@ export function ForceFieldBackground({
       mouseRef.current.y = -9999;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('mouseleave', handleMouseLeave);
+    if (!isMobile) {
+      window.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener('mouseleave', handleMouseLeave);
+    }
     window.addEventListener('resize', resize);
+
+    // Mobile: random animated virtual cursor offsets
+    const mobileOffsetX = Math.random() * 1000;
+    const mobileOffsetY = Math.random() * 1000;
 
     let palette = generatePalette(propsRef.current.hue, propsRef.current.saturation);
     let lastHue = propsRef.current.hue;
@@ -151,8 +158,13 @@ export function ForceFieldBackground({
         lastSaturation = props.saturation;
       }
 
-      // Smooth mouse
+      // Smooth mouse (or animated virtual cursor on mobile)
       const smx = smoothMouseRef.current;
+      if (isMobile) {
+        const time = performance.now() * 0.0005;
+        mouseRef.current.x = w * 0.5 + Math.sin(time * 0.7 + mobileOffsetX) * w * 0.35 + Math.sin(time * 1.3 + mobileOffsetY) * w * 0.1;
+        mouseRef.current.y = h * 0.5 + Math.cos(time * 0.5 + mobileOffsetY) * h * 0.35 + Math.cos(time * 1.1 + mobileOffsetX) * h * 0.1;
+      }
       smx.x += (mouseRef.current.x - smx.x) * 0.1;
       smx.y += (mouseRef.current.y - smx.y) * 0.1;
 
@@ -211,8 +223,10 @@ export function ForceFieldBackground({
 
     return () => {
       cancelAnimationFrame(animFrameRef.current);
-      window.removeEventListener('mousemove', handleMouseMove);
-      container.removeEventListener('mouseleave', handleMouseLeave);
+      if (!isMobile) {
+        window.removeEventListener('mousemove', handleMouseMove);
+        container.removeEventListener('mouseleave', handleMouseLeave);
+      }
       window.removeEventListener('resize', resize);
     };
   }, [generateParticles, generatePalette]);

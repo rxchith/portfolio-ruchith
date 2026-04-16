@@ -10,6 +10,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Renderer, Program, Mesh, Triangle } from 'ogl';
+import { isMobile } from 'react-device-detect';
 
 export interface GradientBlindsProps {
   className?: string;
@@ -292,6 +293,18 @@ void main() {
 
     window.addEventListener('pointermove', onPointerMove);
 
+    // Mobile: random animated spotlight offsets
+    const mobileOffsetX = Math.random() * 1000;
+    const mobileOffsetY = Math.random() * 1000;
+
+    if (isMobile) {
+      // Start mobile spotlight at center
+      const cx = gl.drawingBufferWidth / 2;
+      const cy = gl.drawingBufferHeight / 2;
+      mouseTargetRef.current = [cx, cy];
+      (uniforms.iMouse.value as number[]) = [cx, cy];
+    }
+
     const loop = (t: number) => {
       rafRef.current = requestAnimationFrame(loop);
       (uniforms.iTime.value as number) = t * 0.001;
@@ -303,6 +316,16 @@ void main() {
         const tau = Math.max(1e-4, mouseDampening);
         let factor = 1 - Math.exp(-dt / tau);
         if (factor > 1) factor = 1;
+
+        // On mobile, animate the spotlight position with smooth wandering
+        if (isMobile) {
+          const time = t * 0.0003;
+          const res = uniforms.iResolution.value as number[];
+          const targetX = res[0] * 0.5 + Math.sin(time * 0.7 + mobileOffsetX) * res[0] * 0.35 + Math.sin(time * 1.5 + mobileOffsetY) * res[0] * 0.1;
+          const targetY = res[1] * 0.5 + Math.cos(time * 0.5 + mobileOffsetY) * res[1] * 0.35 + Math.cos(time * 1.2 + mobileOffsetX) * res[1] * 0.1;
+          mouseTargetRef.current = [targetX, targetY];
+        }
+
         const target = mouseTargetRef.current;
         const cur = uniforms.iMouse.value as [number, number];
         cur[0] += (target[0] - cur[0]) * factor;

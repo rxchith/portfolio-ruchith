@@ -1,4 +1,3 @@
-
 import { Edges, MeshPortalMaterial, Text, TextProps, useScroll, useTexture } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { usePortalStore } from '@stores';
@@ -45,8 +44,8 @@ const GridTile = (props: GridTileProps) => {
         letterSpacing: 0.4,
       });
       gsap.to(titleRef.current.position, {
-        x: isWork ? 1: -1,
-        y: isWork ? -1.7 : 1.5,
+        x: isWork ? 0.7 : -0.7,
+        y: isWork ? -1.5 : 1.3,
         duration: 0.5,
       });
     }

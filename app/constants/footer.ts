@@ -6,7 +6,7 @@ export const FOOTER_LINKS: FooterLink[] = [
     name: 'LinkedIn',
     hoverText: 'Connect with me',
     icon: getPath('icons/linkedin.svg'),
-    url: 'https://www.linkedin.com/in/mohit-virli-4780b6112/',
+    url: 'https://linkedin.com/in/rxchith/',
   },
   {
     name: 'Behance',
@@ -16,15 +16,15 @@ export const FOOTER_LINKS: FooterLink[] = [
   },
   {
     name: 'Spotify',
-    hoverText: 'Curated playlists',
+    hoverText: 'Check out my Playlists',
     icon: getPath('icons/spotify.svg'),
-    url: 'https://open.spotify.com/user/21hr4w2hzp4ceidewwsb4bxoy',
+    url: 'https://open.spotify.com/user/31tzzis7gdhls2nxuvrupnopmxgm',
   },
   {
     name: 'Instagram',
-    hoverText: '@clevirli',
+    hoverText: '@rxchith',
     icon: getPath('icons/instagram.svg'),
-    url: 'https://www.instagram.com/clevirli/',
+    url: 'https://www.instagram.com/rxchith/',
   },
   {
     name: 'Resume',
