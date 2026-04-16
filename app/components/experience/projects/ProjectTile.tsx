@@ -14,9 +14,10 @@ interface ProjectTileProps {
   position: [number, number, number];
   rotation: [number, number, number];
   activeId: number | null;
+  onClick?: () => void;
 }
 
-const ProjectTile = ({ project, index, position, rotation, activeId }: ProjectTileProps) => {
+const ProjectTile = ({ project, index, position, rotation, activeId, onClick }: ProjectTileProps) => {
   const projectRef = useRef<THREE.Group>(null);
   const hoverAnimRef = useRef<gsap.core.Timeline | null>(null);
   const [hovered, setHovered] = useState(false);
@@ -71,6 +72,7 @@ const ProjectTile = ({ project, index, position, rotation, activeId }: ProjectTi
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
+    if (onClick) onClick();
     if (!project.url) return;
     setTimeout(() => window.open(project.url, '_blank'), 50);
   };
@@ -94,6 +96,7 @@ const ProjectTile = ({ project, index, position, rotation, activeId }: ProjectTi
       }}>
       <group ref={projectRef}>
         {project.image && (
+          /* eslint-disable-next-line jsx-a11y/alt-text */
           <Image
             url={project.image}
             scale={[4.2, 5.8] as [number, number]}
@@ -103,6 +106,7 @@ const ProjectTile = ({ project, index, position, rotation, activeId }: ProjectTi
             opacity={1}
           />
         )}
+
         <Text
           {...titleProps}
           position={[0, -3.3, 0.1]}
