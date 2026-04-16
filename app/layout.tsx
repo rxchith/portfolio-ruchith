@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Outfit } from 'next/font/google';
 import localFont from 'next/font/local';
 import "./globals.css";
-import OldLoader from "./components/OldLoader";
+import IntroLoader from "./components/IntroLoader";
 
 const soriaFont = localFont({
   src: "../public/soria-font.ttf",
@@ -77,7 +77,7 @@ export default function RootLayout({
       <body
         className={`${soriaFont.variable} ${vercettiFont.variable} ${outfit.variable} font-sans antialiased`}
       >
-        <OldLoader />
+        <IntroLoader />
         {children}
       </body>
       <GoogleAnalytics gaId={'G-7WD4HM3XRE'}/>
