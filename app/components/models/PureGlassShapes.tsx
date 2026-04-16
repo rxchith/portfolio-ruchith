@@ -5,6 +5,7 @@ import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { isMobile } from "react-device-detect";
 
 interface InternalGlassProps {
   index: number;
@@ -87,27 +88,30 @@ export function PureGlassShapes() {
   const shapes = useMemo(() => {
     const vibrantPalette = ['#00F2FF', '#FF7F00', '#32FF00', '#FF00FF', '#FFD700', '#007FFF'];
 
-    return uniqueMeshes.map((mesh, i) => {
-      const sides = [1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1];
-      const side = sides[i % sides.length];
-      
-      const xPos = (20 + (i * 10)) * side; 
-      const yPos = 25 - (i * 12); 
-      const zPos = -40 - (i % 4) * 8; 
-      
-      const sizes = [2.5, 3.5, 2.2, 3.2, 2.0, 3.0, 2.4, 3.5, 2.8, 3.2, 2.5, 3.0];
-      const scale = sizes[i % sizes.length] * 0.7;
+    return uniqueMeshes
+      .filter((_, i) => !isMobile || i < 6) // Reduce density on mobile
+      .map((mesh, i) => {
+        const sides = [1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1];
+        const side = sides[i % sides.length];
+        
+        // Pushed further out on mobile to clear vertical center
+        const xPos = (isMobile ? 15 : 38 + (i * 7)) * side; 
+        const yPos = 30 - (i * 12); 
+        const zPos = -40 - (i % 4) * 10; 
+        
+        const sizes = [2.5, 3.5, 2.2, 3.2, 2.0, 3.0, 2.4, 3.5, 2.8, 3.2, 2.5, 3.0];
+        const scale = sizes[i % sizes.length] * (isMobile ? 0.5 : 0.7);
 
-      return {
-        id: mesh.uuid + i,
-        mesh,
-        color: vibrantPalette[i % vibrantPalette.length],
-        position: [xPos, yPos, zPos] as [number, number, number],
-        scale: scale, 
-        speed: 0.2 + (i * 0.05),
-        rotation: [(i * 0.5), (i * 0.9), (i * 1.5)] as [number, number, number]
-      };
-    });
+        return {
+          id: mesh.uuid + i,
+          mesh,
+          color: vibrantPalette[i % vibrantPalette.length],
+          position: [xPos, yPos, zPos] as [number, number, number],
+          scale: scale, 
+          speed: 0.2 + (i * 0.05),
+          rotation: [(i * 0.5), (i * 0.9), (i * 1.5)] as [number, number, number]
+        };
+      });
   }, [uniqueMeshes]);
 
 

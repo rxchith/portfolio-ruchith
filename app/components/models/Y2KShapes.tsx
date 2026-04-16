@@ -5,6 +5,7 @@ import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { isMobile } from "react-device-detect";
 
 interface InternalShapeProps {
   index: number;
@@ -75,26 +76,29 @@ export function ScatteredShapes() {
   }, [scene]);
 
   const shapes = useMemo(() => {
-    return uniqueMeshes.map((mesh, i) => {
-      const sides = [1, -1, 1, 1, -1, -1, 1, -1];
-      const side = sides[i % sides.length];
-      
-      const xPos = (25 + (i * 8)) * side; 
-      const yPos = 20 - (i * 10); 
-      const zPos = -30 - (i % 2) * 10; 
-      
-      const sizes = [3.5, 5.0, 3.0, 6.5, 4.0, 5.5, 3.2, 4.5];
-      const scale = sizes[i % sizes.length] * 0.8;
+    return uniqueMeshes
+      .filter((_, i) => !isMobile || i < 5) // Reduce density on mobile
+      .map((mesh, i) => {
+        const sides = [1, -1, 1, 1, -1, -1, 1, -1];
+        const side = sides[i % sides.length];
+        
+        // Pushed further out on mobile to clear vertical center
+        const xPos = (isMobile ? 12 : 32 + (i * 5)) * side; 
+        const yPos = 25 - (i * 12); 
+        const zPos = -30 - (i % 2) * 15; 
+        
+        const sizes = [3.5, 5.0, 3.0, 6.5, 4.0, 5.5, 3.2, 4.5];
+        const scale = sizes[i % sizes.length] * (isMobile ? 0.5 : 0.8);
 
-      return {
-        id: mesh.uuid + i,
-        mesh,
-        position: [xPos, yPos, zPos] as [number, number, number],
-        scale: scale, 
-        speed: 0.4 + (i * 0.1),
-        rotation: [(i * 1.5), (i * 2.2), (i * 0.8)] as [number, number, number]
-      };
-    });
+        return {
+          id: mesh.uuid + i,
+          mesh,
+          position: [xPos, yPos, zPos] as [number, number, number],
+          scale: scale, 
+          speed: 0.4 + (i * 0.1),
+          rotation: [(i * 1.5), (i * 2.2), (i * 0.8)] as [number, number, number]
+        };
+      });
   }, [uniqueMeshes]);
 
 

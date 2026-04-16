@@ -319,7 +319,7 @@ void main() {
 
         // On mobile, animate the spotlight position with smooth wandering
         if (isMobile) {
-          const time = t * 0.0003;
+          const time = t * 0.0006; // Increased speed from 0.0003
           const res = uniforms.iResolution.value as number[];
           const targetX = res[0] * 0.5 + Math.sin(time * 0.7 + mobileOffsetX) * res[0] * 0.35 + Math.sin(time * 1.5 + mobileOffsetY) * res[0] * 0.1;
           const targetY = res[1] * 0.5 + Math.cos(time * 0.5 + mobileOffsetY) * res[1] * 0.35 + Math.cos(time * 1.2 + mobileOffsetX) * res[1] * 0.1;

@@ -5,6 +5,7 @@ import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { isMobile } from "react-device-detect";
 
 interface InternalPearlyProps {
   index: number;
@@ -82,29 +83,31 @@ export function PearlyShapes() {
   const shapes = useMemo(() => {
     const vibrantPalette = ['#FF1DCE', '#00F5FF', '#76FF03', '#FFD600', '#6200EA', '#FF3D00', '#1DE9B6'];
 
-    return uniqueMeshes.map((mesh, i) => {
-      const sides = [-1, 1, -1, 1, -1, 1, -1, 1];
-      const side = sides[i % sides.length];
-      
-      // Pushed way further out and spread vertically
-      const xPos = (15 + (i * 6)) * side; 
-      const yPos = 12 - (i * 7); 
-      const zPos = -15 - (i % 3) * 5; 
-      
-      const sizes = [1.5, 1.8, 1.2, 2.0, 1.3, 1.6, 1.4, 2.0];
-      const scale = sizes[i % sizes.length] * 0.9;
+    return uniqueMeshes
+      .filter((_, i) => !isMobile || i < 4) // Reduce density on mobile
+      .map((mesh, i) => {
+        const sides = [-1, 1, -1, 1, -1, 1, -1, 1];
+        const side = sides[i % sides.length];
+        
+        // Pushed further out on mobile to clear vertical center
+        const xPos = (isMobile ? 12 : 18 + (i * 4)) * side; 
+        const yPos = 12 - (i * 7); 
+        const zPos = -15 - (i % 3) * 5; 
+        
+        const sizes = [1.5, 1.8, 1.2, 2.0, 1.3, 1.6, 1.4, 2.0];
+        const scale = sizes[i % sizes.length] * (isMobile ? 0.6 : 0.9);
 
-      
-      return {
-        id: mesh.uuid + i,
-        mesh,
-        color: vibrantPalette[i % vibrantPalette.length],
-        position: [xPos, yPos, zPos] as [number, number, number],
-        scale: scale, 
-        speed: 0.3 + (i * 0.05),
-        rotation: [(i * 2), (i * 1.2), (i * 3)] as [number, number, number]
-      };
-    });
+        
+        return {
+          id: mesh.uuid + i,
+          mesh,
+          color: vibrantPalette[i % vibrantPalette.length],
+          position: [xPos, yPos, zPos] as [number, number, number],
+          scale: scale, 
+          speed: 0.3 + (i * 0.05),
+          rotation: [(i * 2), (i * 1.2), (i * 3)] as [number, number, number]
+        };
+      });
   }, [uniqueMeshes]);
 
 

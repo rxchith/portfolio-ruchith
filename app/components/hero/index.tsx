@@ -16,7 +16,7 @@ import { getPath } from "../../utils/getPath";
 /**
  * FloatingIcon — A smaller, vibrant element that frames the text.
  */
-function FloatingIcon({ mesh, color, position, rotationSpeed = 1 }: { mesh: THREE.Mesh, color: string, position: [number, number, number], rotationSpeed?: number }) {
+function FloatingIcon({ mesh, color, position, rotationSpeed = 1, index = 0 }: { mesh: THREE.Mesh, color: string, position: [number, number, number], rotationSpeed?: number, index?: number }) {
   const ref = useRef<THREE.Group>(null);
   
   const iconMesh = useMemo(() => {
@@ -29,8 +29,10 @@ function FloatingIcon({ mesh, color, position, rotationSpeed = 1 }: { mesh: THRE
     const radius = clone.geometry.boundingSphere?.radius || 1;
     clone.scale.setScalar(1 / radius);
     
-    // Scaled up significantly to 1.5 for a bold, intentional look
-    clone.scale.multiplyScalar(isMobile ? 1 : 1.5);
+    // Scaled based on index for variety
+    const scaleMap = [1.8, 1.4, 2.2, 1.6];
+    const baseScale = scaleMap[index % scaleMap.length] || 1.5;
+    clone.scale.multiplyScalar(isMobile ? baseScale * 0.6 : baseScale);
     
     clone.material = new THREE.MeshPhysicalMaterial({
       color: color,
@@ -39,13 +41,16 @@ function FloatingIcon({ mesh, color, position, rotationSpeed = 1 }: { mesh: THRE
       envMapIntensity: 2,
     });
     return clone;
-  }, [mesh, color]);
+  }, [mesh, color, index]);
 
   useFrame((state) => {
     if (ref.current) {
       const t = state.clock.getElapsedTime();
-      ref.current.position.y += Math.sin(t + position[0]) * 0.005;
+      // More complex floating: Y-bobbing + slight X-drift
+      ref.current.position.y = position[1] + Math.sin(t * 0.5 + index) * 0.2;
+      ref.current.position.x = position[0] + Math.cos(t * 0.3 + index) * 0.1;
       ref.current.rotation.y += 0.01 * rotationSpeed;
+      ref.current.rotation.z += 0.005 * rotationSpeed;
     }
   });
 
@@ -65,8 +70,10 @@ const Hero = () => {
   const heroMeshes = useMemo(() => {
     const meshes: THREE.Mesh[] = [];
     glossyScene.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh && meshes.length < 2) {
-        meshes.push(child as THREE.Mesh);
+      if ((child as THREE.Mesh).isMesh && meshes.length < 4) {
+        if (!meshes.find(m => m.name.substring(0, 5) === child.name.substring(0, 5))) {
+          meshes.push(child as THREE.Mesh);
+        }
       }
     });
     return meshes;
@@ -91,9 +98,9 @@ const Hero = () => {
       <group ref={titleContainerRef} position={[0, 2, -10]}>
         {/* Subtitle (Top) */}
         <Text 
-          position={[0, isMobile ? 1.6 : 2.2, 0]} 
+          position={[0, isMobile ? 1.8 : 2.2, 0]} 
           font={getPath("soria-font.ttf")} 
-          fontSize={isMobile ? 0.3 : 0.45} 
+          fontSize={isMobile ? 0.5 : 0.45} 
           color="#ffffff" 
           letterSpacing={0.5} 
           textAlign="center"
@@ -102,7 +109,7 @@ const Hero = () => {
         </Text>
 
         {/* Main Title (Bottom) */}
-        <group position={[0, isMobile ? -0.4 : -0.8, 0]}>
+        <group position={[0, isMobile ? -0.2 : -0.8, 0]}>
           {uiPortalNode && (
             <Html 
               center 
@@ -112,30 +119,40 @@ const Hero = () => {
             >
               <TextPressure 
                 text="Ruchith" 
-                className={`${isMobile ? 'text-[60px]' : 'text-[120px]'} font-black uppercase tracking-tighter text-white`}
+                className={`${isMobile ? 'text-[85px]' : 'text-[120px]'} font-black uppercase tracking-tighter text-white`}
               />
             </Html>
           )}
         </group>
       </group>
       
-      {/* Decorative center shapes to fill the "blank area" */}
-      {heroMeshes.length >= 2 && (
-        <group position={[0, 2, -10]}>
-          <FloatingIcon 
-            mesh={heroMeshes[0]} 
-            color="#00F2FF" 
-            position={[isMobile ? -3.5 : -6.5, 0.5, 0]} 
-            rotationSpeed={0.5} 
-          />
-          <FloatingIcon 
-            mesh={heroMeshes[1]} 
-            color="#FF7F00" 
-            position={[isMobile ? 3.5 : 6.5, -0.5, 0]} 
-            rotationSpeed={-0.3} 
-          />
-        </group>
-      )}
+      {/* Decorative center shapes with "Dynamic Depth Cascade" layout */}
+      <group position={[0, 2, -10]}>
+        {heroMeshes.map((mesh, i) => {
+          // Optimized for vertical mobile screens
+          const positions: [number, number, number][] = [
+            [isMobile ? -3 : -15, isMobile ? 7 : 5, -8],    // Top Left
+            [isMobile ? 3 : 12, isMobile ? 5 : 4, 2],       // Top Right
+            [isMobile ? -3.5 : -11, isMobile ? -6 : -3, -4], // Bottom Left
+            [isMobile ? 3.5 : 16, isMobile ? -4 : -2, -6],   // Bottom Right
+          ];
+          
+          const colors = ["#00F2FF", "#FF7F00", "#FF1DCE", "#76FF03"];
+          
+          if (i >= positions.length) return null;
+
+          return (
+            <FloatingIcon 
+              key={mesh.uuid}
+              index={i}
+              mesh={mesh} 
+              color={colors[i % colors.length]} 
+              position={positions[i]} 
+              rotationSpeed={0.5 * (i % 2 === 0 ? 1 : -1)} 
+            />
+          );
+        })}
+      </group>
       
       {/* Hyper-Object Lighting */}
       <pointLight position={[-10, 10, 10]} color="#ffffff" intensity={20} distance={100} />

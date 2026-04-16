@@ -161,7 +161,7 @@ export function ForceFieldBackground({
       // Smooth mouse (or animated virtual cursor on mobile)
       const smx = smoothMouseRef.current;
       if (isMobile) {
-        const time = performance.now() * 0.0005;
+        const time = performance.now() * 0.001; // Increased speed from 0.0005
         mouseRef.current.x = w * 0.5 + Math.sin(time * 0.7 + mobileOffsetX) * w * 0.35 + Math.sin(time * 1.3 + mobileOffsetY) * w * 0.1;
         mouseRef.current.y = h * 0.5 + Math.cos(time * 0.5 + mobileOffsetY) * h * 0.35 + Math.cos(time * 1.1 + mobileOffsetX) * h * 0.1;
       }
