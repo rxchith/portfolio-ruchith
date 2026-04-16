@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+  trailingSlash: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
