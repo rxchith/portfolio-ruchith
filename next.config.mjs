@@ -1,10 +1,13 @@
+const isProd = process.env.NODE_ENV === 'production';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
   images: {
     unoptimized: true,
   },
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+  basePath: isProd ? '/portfolio-ruchith' : '',
+  assetPrefix: isProd ? '/portfolio-ruchith/' : '',
   trailingSlash: true,
   eslint: {
     ignoreDuringBuilds: true,
@@ -17,7 +20,7 @@ const nextConfig = {
     appIsrStatus: false,
   },
   env: {
-    googleAnalyticsId: process.env.NODE_ENV === "production" ? process.env.GA_MEASUREMENT_ID : "",
+    googleAnalyticsId: isProd ? process.env.GA_MEASUREMENT_ID : "",
   }
 };
 
