@@ -14,6 +14,7 @@ export default function SplineHero() {
       
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden transition-opacity duration-1000">
         <div className="w-full h-full transform scale-75 opacity-80">
+          {/* @ts-expect-error - spline-viewer is a custom element */}
           <spline-viewer 
              url="https://prod.spline.design/ATu8-Q9pQ9Z8D8S0/scene.splinecode"
              className="w-full h-full"
