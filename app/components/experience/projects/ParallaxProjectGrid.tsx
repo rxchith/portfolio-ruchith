@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { PROJECTS } from "@constants";
 import ProjectTile from "./ProjectTile";
