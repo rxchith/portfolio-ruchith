@@ -2,11 +2,39 @@ import { Project } from "../types";
 
 export const PROJECTS: Project[] = [
   {
+    title: "Pluto Money: Gamified UX",
+    date: "FEB 2025",
+    subtext: "App Onboarding",
+    image: "/projects/pluto_onboarding.png",
+    url: "https://www.behance.net/gallery/247759661/Pluto-Money-App-Onboarding-Gamified-UX"
+  },
+  {
+    title: "Pluto Money: Mobile App",
+    date: "FEB 2025",
+    subtext: "Fintech Interface Design",
+    image: "/projects/pluto_mobile.png",
+    url: "https://www.behance.net/gallery/247760221/Pluto-Money-Mobile-App-Design"
+  },
+  {
+    title: "Pluto Money Web Experience",
+    date: "FEB 2025",
+    subtext: "Desktop Interface",
+    image: "/projects/pluto_web.png",
+    url: "https://www.behance.net/gallery/247757319/Pluto-Money-Web-Experience"
+  },
+  {
     title: "The Bear House UX Case Study",
     date: "MAR 2025",
     subtext: "E-commerce Redesign",
     image: "/projects/bear_house.png",
     url: "https://www.behance.net/gallery/228191171/The-Bear-House-UX-Case-Study"
+  },
+  {
+    title: "The Bear House Performance",
+    date: "SEP 2024",
+    subtext: "High-Energy Reels",
+    image: "/projects/bear_house_performance.png",
+    url: "https://www.behance.net/gallery/208316335/The-Bear-House-Performance-Reels"
   },
   {
     title: "The Weeknd Posters",
@@ -37,6 +65,13 @@ export const PROJECTS: Project[] = [
     url: "https://www.behance.net/gallery/204801385/Wellbi-Branding"
   },
   {
+    title: "Wellbi Website Redesign",
+    date: "AUG 2024",
+    subtext: "UI/UX Platform",
+    image: "/projects/wellbi.png", // Reusing existing wellbi image as I couldn't generate a new one
+    url: "https://www.behance.net/gallery/204803023/Wellbi-Website-Redesign"
+  },
+  {
     title: "App Store Analytics",
     date: "SEP 2024",
     subtext: "Fintech App UI/UX",
@@ -58,9 +93,9 @@ export const PROJECTS: Project[] = [
     url: "https://www.behance.net/gallery/208324215/The-Bear-House-Social-Media-Reels"
   },
   {
-    title: "Experimental Typography",
+    title: "Posters & Typography",
     date: "JUN 2024",
-    subtext: "Swiss Grid Posters",
+    subtext: "Swiss Grid Designs",
     image: "/projects/typography.png",
     url: "https://www.behance.net/gallery/207409519/Posters"
   }
