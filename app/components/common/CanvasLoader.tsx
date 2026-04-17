@@ -1,7 +1,7 @@
 'use client';
 
 import { useGSAP } from "@gsap/react";
-import { AdaptiveDpr, Environment, Preload, ScrollControls, useProgress } from "@react-three/drei";
+import { AdaptiveDpr, Environment, Preload, ScrollControls, useProgress, BakeShadows } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { Suspense, useEffect, useRef, useState } from "react";
@@ -53,13 +53,14 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
         shadows
         style={canvasStyle}
         ref={canvasRef}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true, toneMapping: 3, toneMappingExposure: 1.2 }}
+        dpr={isMobile ? [1, 1.5] : [1, 2]}
+        gl={{ antialias: !isMobile, alpha: true, toneMapping: 3, toneMappingExposure: 1.2 }}
       >
         <Suspense fallback={null}>
           <ambientLight intensity={1.5} />
           <pointLight position={[10, 10, 10]} intensity={50} />
           <Environment preset="night" />
+          <BakeShadows />
 
           {/* Pass the portal node to children if they need it */}
           <ScrollControls pages={6} damping={0.2} style={{ zIndex: 10 }}>

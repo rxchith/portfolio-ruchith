@@ -159,7 +159,7 @@ const Hero = () => {
       <pointLight position={[10, -10, 5]} color="#ffffff" intensity={10} distance={100} />
 
       <group position={[0, -25, 5.69]}>
-        <pointLight castShadow position={[1, 1, -2.5]} intensity={80} distance={15} color="#fff"/>
+        <pointLight castShadow shadow-mapSize={[512, 512]} position={[1, 1, -2.5]} intensity={80} distance={15} color="#fff"/>
         <WindowModel receiveShadow/>
         <TextWindow/>
       </group>

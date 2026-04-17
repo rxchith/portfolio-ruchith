@@ -84,9 +84,9 @@ export function GradientBlinds({
     if (!container) return;
 
     const renderer = new Renderer({
-      dpr: dpr ?? (typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1),
+      dpr: dpr ?? (typeof window !== 'undefined' ? (isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : window.devicePixelRatio || 1) : 1),
       alpha: true,
-      antialias: true
+      antialias: !isMobile
     });
     rendererRef.current = renderer;
     const gl = renderer.gl;
