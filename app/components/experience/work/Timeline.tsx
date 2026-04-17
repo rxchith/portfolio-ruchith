@@ -15,6 +15,9 @@ const reusableRight = new THREE.Vector3(0.3, 0, -0.1);
 
 const TimelinePoint = ({ point, diff }: { point: WorkTimelinePoint, diff: number }) => {
   const getPoint = useMemo(() => {
+    // On mobile, always center the text below the point for readability
+    if (isMobile) return new THREE.Vector3(0, -1.2, 0);
+    
     switch (point.position) {
       case 'left': return reusableLeft;
       case 'right': return reusableRight;
@@ -22,20 +25,20 @@ const TimelinePoint = ({ point, diff }: { point: WorkTimelinePoint, diff: number
     }
   }, [point.position]);
 
-  const textAlign = point.position === 'left' ? 'right' : 'left';
+  const textAlign = isMobile ? 'center' : (point.position === 'left' ? 'right' : 'left');
 
   const textProps: Partial<TextProps> = useMemo(() => ({
     font: getPath("/Vercetti-Regular.woff"),
     color: "white",
-    anchorX: textAlign,
+    anchorX: textAlign as any,
     fillOpacity: 2 - 2 * diff,
   }), [textAlign, diff]);
 
   const titleProps = useMemo(() => ({
     ...textProps,
     font: getPath("/soria-font.ttf"),
-    fontSize: 0.6,
-    maxWidth: 3,
+    fontSize: 0.5,
+    maxWidth: isMobile ? 6 : 4,
   }), [textProps]);
 
 
@@ -47,14 +50,14 @@ const TimelinePoint = ({ point, diff }: { point: WorkTimelinePoint, diff: number
       </Box>
       <group>
         <group position={getPoint}>
-          <Text {...textProps} fontSize={0.3} position={[-diff / 2, 0, 0]}>
+          <Text {...textProps} fontSize={0.25} position={[0, 0.8, 0]}>
             {point.year}
           </Text>
-          <group position={[0, -0.5, 0]}>
-            <Text {...titleProps} fontSize={0.6} maxWidth={3} position={[0, -diff / 2, 0]}>
+          <group position={[0, 0, 0]}>
+            <Text {...titleProps} fontSize={0.5} maxWidth={isMobile ? 8 : 4} position={[0, 0, 0]}>
               {point.title}
             </Text>
-            <Text {...textProps} fontSize={0.2} position={[0, -0.4 - diff, 0]}>
+            <Text {...textProps} fontSize={0.22} position={[0, -0.8, 0]}>
               {point.subtitle}
             </Text>
           </group>

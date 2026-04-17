@@ -12,7 +12,7 @@ import { PureGlassShapes } from "./components/models/PureGlassShapes";
 import { ScatteredShapes } from "./components/models/Y2KShapes";
 import GradientBlinds from "./components/backgrounds/GradientBlinds";
 import ForceFieldBackground from "./components/experience/projects/ForceFieldBackground";
-import JourneyTimeline from "./components/experience/work/JourneyTimeline";
+
 import PlasmaBackground from "./components/experience/work/PlasmaBackground";
 
 const Home = () => {
@@ -21,28 +21,7 @@ const Home = () => {
   const isProjectsActive = activePortalId === "projects";
   const isWorkActive = activePortalId === "work";
 
-  // Scroll data for the journey timeline
-  const [scrollData, setScrollData] = useState({ scrollTop: 0, viewportHeight: 0 });
-  const journeyScrollRef = useRef<HTMLDivElement>(null);
 
-  const handleJourneyScroll = useCallback(() => {
-    const el = journeyScrollRef.current;
-    if (!el) return;
-    setScrollData({ 
-      scrollTop: el.scrollTop, 
-      viewportHeight: el.clientHeight 
-    });
-  }, []);
-
-  // Reset scroll data when portal closes
-  useEffect(() => {
-    if (!isWorkActive) {
-      setScrollData({ scrollTop: 0, viewportHeight: 0 });
-      if (journeyScrollRef.current) {
-        journeyScrollRef.current.scrollTop = 0;
-      }
-    }
-  }, [isWorkActive]);
 
   return (
     <main className="min-h-screen relative bg-[#0a0a0a]">
@@ -108,40 +87,7 @@ const Home = () => {
         )}
       </div>
 
-      {/* Journey Timeline Overlay — shows on top of tubes when work portal is active */}
-      <div
-        className="fixed inset-0 z-[6] transition-opacity duration-700"
-        style={{
-          opacity: isWorkActive ? 1 : 0,
-          pointerEvents: isWorkActive ? 'auto' : 'none',
-        }}
-      >
-        <div
-          ref={journeyScrollRef}
-          onScroll={handleJourneyScroll}
-          className="journey-scroll-container"
-          style={{
-            width: '100%',
-            height: '100%',
-            overflowY: 'auto',
-            overflowX: 'hidden',
-          }}
-        >
-          {/* Top spacer */}
-          <div style={{ height: '35vh' }} />
 
-          {/* SVG Journey Timeline */}
-          <div style={{ padding: '0 20px', maxWidth: 700, margin: '0 auto' }}>
-            <JourneyTimeline 
-              scrollTop={scrollData.scrollTop} 
-              viewportHeight={scrollData.viewportHeight} 
-            />
-          </div>
-
-          {/* Bottom spacer */}
-          <div style={{ height: '65vh' }} />
-        </div>
-      </div>
 
       {/* Interactive 3D Canvas Context */}
       <CanvasLoader>

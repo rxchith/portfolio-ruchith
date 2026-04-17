@@ -1,7 +1,7 @@
-import { Text, TextProps, Image } from "@react-three/drei";
+import { Text, TextProps, Image, useTexture } from "@react-three/drei";
 import { ThreeEvent } from "@react-three/fiber";
 import gsap from "gsap";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import * as THREE from "three";
 
@@ -17,6 +17,48 @@ interface ProjectTileProps {
   activeId: number | null;
   onClick?: () => void;
 }
+
+const ProjectImage = ({ url, hovered }: { url: string, hovered: boolean }) => {
+  const texture = useTexture(url);
+  
+  const { scale, zoom } = useMemo(() => {
+    const maxWidth = 6;
+    const maxHeight = 4.7;
+    const imgAspect = texture.image.width / texture.image.height;
+    const planeAspect = maxWidth / maxHeight;
+    
+    let width = maxWidth;
+    let height = maxHeight;
+    
+    // "Fit" (Contain) logic
+    if (imgAspect > planeAspect) {
+      height = maxWidth / imgAspect;
+    } else {
+      width = maxHeight * imgAspect;
+    }
+    
+    return {
+      scale: [width, height, 1] as [number, number, number],
+      zoom: 1
+    };
+  }, [texture]);
+
+  const scaleAnim = useMemo(() => {
+    const factor = hovered ? 1.08 : 1;
+    return [scale[0] * factor, scale[1] * factor, 1] as [number, number, number];
+  }, [hovered, scale]);
+
+  return (
+    <Image
+      texture={texture}
+      scale={scaleAnim}
+      zoom={zoom}
+      transparent
+      grayscale={0}
+      opacity={1}
+    />
+  );
+};
 
 const ProjectTile = ({ project, index, position, rotation, activeId, onClick }: ProjectTileProps) => {
   const projectRef = useRef<THREE.Group>(null);
@@ -41,16 +83,11 @@ const ProjectTile = ({ project, index, position, rotation, activeId, onClick }: 
     if (!projectRef.current) return;
     hoverAnimRef.current?.kill();
 
-    const [image, title, , subtext] = projectRef.current.children;
+    const [imageGroup, title, , subtext] = projectRef.current.children;
 
     hoverAnimRef.current = gsap.timeline();
     hoverAnimRef.current
       .to(projectRef.current.position, { z: hovered ? 1 : 0, duration: 0.3 }, 0)
-      .to(image.scale, { 
-        x: hovered ? 4.6 : 4.2, 
-        y: hovered ? 6.2 : 5.8,
-        duration: 0.4 
-      }, 0)
       .to(title, { fillOpacity: hovered ? 1 : 0.7, duration: 0.3 }, 0)
       .to(subtext, { fillOpacity: hovered ? 1 : 0, duration: 0.3 }, 0);
   }, [hovered]);
@@ -96,28 +133,24 @@ const ProjectTile = ({ project, index, position, rotation, activeId, onClick }: 
         }
       }}>
       <group ref={projectRef}>
-        {project.image && (
-          /* eslint-disable-next-line jsx-a11y/alt-text */
-          <Image
-            url={getPath(project.image)}
-            scale={[4.2, 5.8] as [number, number]}
-            zoom={1}
-            transparent
-            grayscale={0}
-            opacity={1}
-          />
-        )}
+        <group>
+          {project.image && (
+            <Suspense fallback={null}>
+              <ProjectImage url={getPath(project.image)} hovered={hovered} />
+            </Suspense>
+          )}
+        </group>
 
         <Text
           {...titleProps}
-          position={[0, -3.3, 0.1]}
+          position={[0, -2.8, 0.1]}
           anchorX="center"
           anchorY="top"
           maxWidth={4}
           fontSize={0.4}>
           {project.title}
         </Text>
-        <group position={[0, -3.8, 0.1]}>
+        <group position={[0, -3.3, 0.1]}>
           <Text
             {...subtitleProps}
             anchorX="center"
@@ -128,9 +161,9 @@ const ProjectTile = ({ project, index, position, rotation, activeId, onClick }: 
         </group>
         <Text
           {...subtitleProps}
-          maxWidth={3.8}
+          maxWidth={5}
           anchorX="center"
-          position={[0, -4.2, 0.1]}
+          position={[0, -3.7, 0.1]}
           fontSize={0.15}>
           {project.subtext}
         </Text>
