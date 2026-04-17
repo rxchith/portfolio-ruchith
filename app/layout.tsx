@@ -21,8 +21,11 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Ruchith ✌️",
+  title: "Ruchith 😎",
   description: "A frontend developer by profession, a creative at heart.",
+  icons: {
+    icon: "/favicon.svg",
+  },
   keywords: "Ruchith, Frontend Engineer, React Developer, Three.js, Creative Developer, Web Development, JavaScript, TypeScript, Portfolio",
   authors: [{ name: "Ruchith" }],
   creator: "Ruchith",
