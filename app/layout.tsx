@@ -22,11 +22,11 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: "Ruchith 😎",
-  description: "A frontend developer by profession, a creative at heart.",
+  description: "A Product Designer by profession, a creative at heart.",
   icons: {
     icon: "/favicon.svg",
   },
-  keywords: "Ruchith, Frontend Engineer, React Developer, Three.js, Creative Developer, Web Development, JavaScript, TypeScript, Portfolio",
+  keywords: "Ruchith, Product Designer, UI/UX Designer, Three.js, Creative Designer, Web Design, Experience Design, Portfolio",
   authors: [{ name: "Ruchith" }],
   creator: "Ruchith",
   publisher: "Ruchith",
@@ -46,8 +46,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Ruchith - Frontend Engineer",
-    description: "Frontend engineer by profession, creative at heart.",
+    title: "Ruchith - Product Designer",
+    description: "Product Designer by profession, creative at heart.",
     url: "https://rxchith.github.io",
     siteName: "Ruchith's Portfolio",
     locale: "en_US",
@@ -55,8 +55,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ruchith - Frontend Engineer",
-    description: "Frontend engineer by profession, creative at heart.",
+    title: "Ruchith - Product Designer",
+    description: "Product Designer by profession, creative at heart.",
   },
   verification: {
     google: "GsRYY-ivL0F_VKkfs5KAeToliqz0gCrRAJKKmFkAxBA",
