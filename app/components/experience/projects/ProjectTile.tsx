@@ -38,14 +38,14 @@ const ProjectImage = ({ url, hovered }: { url: string, hovered: boolean }) => {
     }
     
     return {
-      scale: [width, height, 1] as [number, number, number],
+      scale: [width, height] as [number, number],
       zoom: 1
     };
   }, [texture]);
 
   const scaleAnim = useMemo(() => {
     const factor = hovered ? 1.08 : 1;
-    return [scale[0] * factor, scale[1] * factor, 1] as [number, number, number];
+    return [scale[0] * factor, scale[1] * factor] as [number, number];
   }, [hovered, scale]);
 
   return (
@@ -83,7 +83,7 @@ const ProjectTile = ({ project, index, position, rotation, activeId, onClick }: 
     if (!projectRef.current) return;
     hoverAnimRef.current?.kill();
 
-    const [imageGroup, title, , subtext] = projectRef.current.children;
+    const [, title, , subtext] = projectRef.current.children;
 
     hoverAnimRef.current = gsap.timeline();
     hoverAnimRef.current

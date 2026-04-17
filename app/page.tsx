@@ -1,7 +1,6 @@
 'use client';
 
 import { usePortalStore } from "@stores";
-import { useState, useEffect, useRef, useCallback } from "react";
 import CanvasLoader from "./components/common/CanvasLoader";
 import ScrollWrapper from "./components/common/ScrollWrapper";
 import Experience from "./components/experience";

@@ -24,7 +24,6 @@ const IntroLoader = () => {
   const trailsRef = useRef<BlobTrail[]>([]);
   const rafRef = useRef<number>(0);
   const holdStartRef = useRef<number | null>(null);
-  const holdTimerRef = useRef<number>(0);
   const isHoldingRef = useRef(false);
   const progressRef = useRef(0);
   const wavePhaseRef = useRef(0);
@@ -324,10 +323,6 @@ const IntroLoader = () => {
         ctx.fillStyle = '#1a1a2e';
         ctx.fillRect(0, 0, w, h);
       }
-
-      // Subtle parallax shift on base image
-      const parallaxX = ((smx.x - w / 2) / w) * -8;
-      const parallaxY = ((smx.y - h / 2) / h) * -8;
 
       // 2. Draw wave lines
       drawWaves(ctx, w, h, time, smx.x, smx.y);

@@ -4,11 +4,10 @@ import { useGSAP } from "@gsap/react";
 import { AdaptiveDpr, Environment, Preload, ScrollControls, useProgress, BakeShadows } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 
 import { usePortalStore } from "@stores";
-import Preloader from "./Preloader";
 import ProgressLoader from "./ProgressLoader";
 import { ScrollHint } from "./ScrollHint";
 
@@ -18,7 +17,7 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
   const { progress } = useProgress();
   const setUiPortalNode = usePortalStore(state => state.setUiPortalNode);
   
-  const [canvasStyle, setCanvasStyle] = useState<React.CSSProperties>({
+  const [canvasStyle] = useState<React.CSSProperties>({
     position: "fixed",
     top: 0,
     bottom: 0,
