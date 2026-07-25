@@ -14,18 +14,7 @@ export const FOOTER_LINKS: FooterLink[] = [
     icon: getPath('icons/behance.svg'),
     url: 'https://www.behance.net/ruchithramesh/projects',
   },
-  {
-    name: 'Spotify',
-    hoverText: 'Check out my Playlists',
-    icon: getPath('icons/spotify.svg'),
-    url: 'https://open.spotify.com/user/31tzzis7gdhls2nxuvrupnopmxgm',
-  },
-  {
-    name: 'Instagram',
-    hoverText: '@rxchith',
-    icon: getPath('icons/instagram.svg'),
-    url: 'https://www.instagram.com/rxchith/',
-  },
+
   {
     name: 'Resume',
     hoverText: 'Download Resume',
