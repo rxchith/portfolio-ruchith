@@ -1,10 +1,10 @@
 'use client';
 
-import { Text, useGLTF, Html } from "@react-three/drei";
+import { Text, useGLTF, Html, useScroll } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useProgress } from "@react-three/drei";
 import gsap from "gsap";
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useCallback } from "react";
 import { isMobile } from "react-device-detect";
 import * as THREE from "three";
 import WindowModel from "../models/WindowModel";
@@ -63,9 +63,11 @@ function FloatingIcon({ mesh, color, position, rotationSpeed = 1, index = 0 }: {
 
 const Hero = () => {
   const titleContainerRef = useRef<THREE.Group>(null);
+  const buttonOpacityRef = useRef(1);
   const { progress } = useProgress();
   const { scene: glossyScene } = useGLTF(getPath('models/glossy_shapes.glb'));
   const uiPortalNode = usePortalStore(state => state.uiPortalNode);
+  const data = useScroll();
   
   const heroMeshes = useMemo(() => {
     const meshes: THREE.Mesh[] = [];
@@ -78,6 +80,30 @@ const Hero = () => {
     });
     return meshes;
   }, [glossyScene]);
+
+  const skipToProjects = useCallback(() => {
+    const el = data.el;
+    if (!el) return;
+    const maxScroll = el.scrollHeight - el.clientHeight;
+
+    // 3-segment scroll: fast hero → slow door → fast to projects
+    const tl = gsap.timeline();
+    tl.to(el, {
+      scrollTop: maxScroll * 0.3,
+      duration: 1.2,
+      ease: 'power2.in',
+    });
+    tl.to(el, {
+      scrollTop: maxScroll * 0.8,
+      duration: 3.5,
+      ease: 'power1.inOut',
+    });
+    tl.to(el, {
+      scrollTop: maxScroll,
+      duration: 1,
+      ease: 'power2.out',
+    });
+  }, [data]);
 
   useEffect(() => {
     if (progress === 100 && titleContainerRef.current) {
@@ -92,6 +118,11 @@ const Hero = () => {
     }
   }, [progress]);
 
+  // Fade out the skip button as user scrolls
+  useFrame(() => {
+    const scrollOffset = data.offset;
+    buttonOpacityRef.current = Math.max(0, 1 - scrollOffset * 8);
+  });
 
   return (
     <>
@@ -121,6 +152,55 @@ const Hero = () => {
                 text="Ruchith" 
                 className={`${isMobile ? 'text-[154px]' : 'text-[120px]'} tracking-tighter text-white uppercase italic`}
               />
+            </Html>
+          )}
+        </group>
+
+        {/* Skip to Projects button */}
+        <group position={[0, isMobile ? -2.2 : -3.2, 0]}>
+          {uiPortalNode && (
+            <Html
+              center
+              transform
+              distanceFactor={isMobile ? 5 : 10}
+              portal={{ current: uiPortalNode as HTMLElement }}
+            >
+              <button
+                onClick={skipToProjects}
+                style={{
+                  opacity: buttonOpacityRef.current,
+                  fontFamily: 'var(--font-outfit), sans-serif',
+                  background: 'rgba(255, 255, 255, 0.06)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  padding: '10px 28px',
+                  borderRadius: '50px',
+                  fontSize: '13px',
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase' as const,
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  whiteSpace: 'nowrap' as const,
+                  pointerEvents: 'auto' as const,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.95)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
+                }}
+              >
+                Skip to Projects
+                <span style={{ fontSize: '16px', lineHeight: 1 }}>↓</span>
+              </button>
             </Html>
           )}
         </group>
