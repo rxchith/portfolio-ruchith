@@ -21,6 +21,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://rxchith.github.io/portfolio-ruchith"),
   title: "Ruchith 😎",
   description: "A Product Designer by profession, a creative at heart.",
   icons: {
@@ -48,8 +49,16 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ruchith - Product Designer",
     description: "Product Designer by profession, creative at heart.",
-    url: "https://rxchith.github.io",
+    url: "https://rxchith.github.io/portfolio-ruchith",
     siteName: "Ruchith's Portfolio",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Ruchith - Product Designer",
+      },
+    ],
     locale: "en_US",
     type: "website",
   },
@@ -57,6 +66,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ruchith - Product Designer",
     description: "Product Designer by profession, creative at heart.",
+    images: ["/opengraph-image.png"],
   },
   verification: {
     google: "GsRYY-ivL0F_VKkfs5KAeToliqz0gCrRAJKKmFkAxBA",
@@ -76,9 +86,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="overscroll-y-none">
+    <html lang="en" className="overscroll-y-none" suppressHydrationWarning>
       <body
         className={`${soriaFont.variable} ${vercettiFont.variable} ${outfit.variable} font-sans antialiased`}
+        suppressHydrationWarning
       >
         <IntroLoader />
         {children}

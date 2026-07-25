@@ -13,6 +13,7 @@ interface BlobTrail {
 }
 
 const HOLD_DURATION = 3000; // 3 seconds to reveal
+const AUTO_START_DELAY = 500; // ms delay before auto-start
 
 const IntroLoader = () => {
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -27,9 +28,11 @@ const IntroLoader = () => {
   const isHoldingRef = useRef(false);
   const progressRef = useRef(0);
   const wavePhaseRef = useRef(0);
+  const autoStartedRef = useRef(false);
   const prevTimeRef = useRef<number>(0);
 
   const [dismissed, setDismissed] = useState(false);
+  const [animatingOut, setAnimatingOut] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [holdProgress, setHoldProgress] = useState(0);
 
@@ -56,31 +59,51 @@ const IntroLoader = () => {
     revealImgRef.current = img2;
   }, []);
 
+  // Auto-start the hold once images are loaded
+  useEffect(() => {
+    if (!imagesLoaded || autoStartedRef.current || dismissed) return;
+    autoStartedRef.current = true;
+
+    const timer = setTimeout(() => {
+      // Place the "hold" origin at the center of the screen
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      holdStartRef.current = performance.now();
+      isHoldingRef.current = true;
+      mouseRef.current = { x: cx, y: cy };
+      smoothMouseRef.current = { x: cx, y: cy };
+    }, AUTO_START_DELAY);
+
+    return () => clearTimeout(timer);
+  }, [imagesLoaded, dismissed]);
+
   // Dismiss animation
   const dismiss = useCallback(() => {
-    if (dismissed) return;
-    setDismissed(true);
+    if (dismissed || animatingOut) return;
+    setAnimatingOut(true);
 
     if (loaderRef.current) {
+      // Immediately disable pointer events so scroll works
+      loaderRef.current.style.pointerEvents = 'none';
+      
       gsap.to(loaderRef.current, {
         yPercent: -100,
         duration: 1.4,
         ease: 'power4.inOut',
         onComplete: () => {
-          if (loaderRef.current) {
-            loaderRef.current.style.display = 'none';
-          }
+          setDismissed(true);
         },
       });
+    } else {
+      setDismissed(true);
     }
-  }, [dismissed]);
+  }, [dismissed, animatingOut]);
 
-  // Hold interaction handlers
+  // Hold interaction handlers (kept for manual override, but auto-start is primary)
   const startHold = useCallback(
     (x: number, y: number) => {
       if (dismissed) return;
-      holdStartRef.current = performance.now();
-      isHoldingRef.current = true;
+      // Manual hold still works — just updates position
       mouseRef.current = { x, y };
       if (smoothMouseRef.current.x < -5000) {
         smoothMouseRef.current = { x, y };
@@ -281,11 +304,9 @@ const IntroLoader = () => {
       smx.x += (mouseRef.current.x - smx.x) * 0.08;
       smx.y += (mouseRef.current.y - smx.y) * 0.08;
 
-      // Update hold progress
+      // Update hold progress — auto-progress (never decays once started)
       if (isHoldingRef.current) {
         progressRef.current = Math.min(1, progressRef.current + dt / HOLD_DURATION);
-      } else {
-        progressRef.current = Math.max(0, progressRef.current - dt / 1500); // 1.5 seconds to fade back
       }
       setHoldProgress(progressRef.current);
 
@@ -366,28 +387,7 @@ const IntroLoader = () => {
         ctx.drawImage(offCanvas, 0, 0);
       }
 
-      // 4. Draw hold progress ring
-      if (isHoldingRef.current && progressRef.current > 0) {
-        ctx.save();
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-        ctx.lineWidth = 3;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.arc(
-          smx.x,
-          smx.y,
-          80 + progressRef.current * 30,
-          -Math.PI / 2,
-          -Math.PI / 2 + Math.PI * 2 * progressRef.current
-        );
-        ctx.stroke();
 
-        // Glow effect
-        ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
-        ctx.shadowBlur = 20;
-        ctx.stroke();
-        ctx.restore();
-      }
 
       // Subtle vignette
       const vignette = ctx.createRadialGradient(
@@ -420,7 +420,7 @@ const IntroLoader = () => {
     <div
       ref={loaderRef}
       className="fixed inset-0 z-[10000] bg-black"
-      style={{ touchAction: 'none' }}
+      style={{ touchAction: 'none', pointerEvents: animatingOut ? 'none' : 'auto' }}
     >
       {/* Full-screen interactive canvas */}
       <canvas
@@ -471,7 +471,7 @@ const IntroLoader = () => {
         </div>
       </div>
 
-      {/* Instruction hint */}
+      {/* Loading indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 pointer-events-none text-center">
         <p
           className="text-white/50 text-xs tracking-[0.3em] uppercase"
@@ -479,7 +479,7 @@ const IntroLoader = () => {
         >
           {holdProgress > 0.01
             ? `${Math.round(holdProgress * 100)}%`
-            : 'TAP & HOLD TO ENTER'}
+            : 'LOADING...'}
         </p>
 
         {/* Progress bar */}
