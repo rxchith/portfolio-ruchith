@@ -25,7 +25,7 @@ export const ScrollHint = () => {
         setHintText('SCROLL');
         setShowScrollHint(scrollProgress === 0);
       } else {
-        setHintText('PAN');
+        setHintText('SCROLL');
         setShowScrollHint(true);
       }
     }

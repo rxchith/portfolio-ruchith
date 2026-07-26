@@ -11,6 +11,7 @@ import { PureGlassShapes } from "./components/models/PureGlassShapes";
 import { ScatteredShapes } from "./components/models/Y2KShapes";
 import GradientBlinds from "./components/backgrounds/GradientBlinds";
 import ForceFieldBackground from "./components/experience/projects/ForceFieldBackground";
+import BentoProjectGrid from "./components/experience/projects/BentoProjectGrid";
 
 import PlasmaBackground from "./components/experience/work/PlasmaBackground";
 
@@ -100,6 +101,9 @@ const Home = () => {
           <Footer/>
         </ScrollWrapper>
       </CanvasLoader>
+
+      {/* Bento Project Grid — rendered outside R3F canvas tree */}
+      <BentoProjectGrid />
 
       {/* Subtle Noise Texture Overlay */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-[100] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>

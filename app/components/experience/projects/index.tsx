@@ -2,9 +2,7 @@ import { useScroll } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect } from "react";
-import { isMobile } from "react-device-detect";
 import { usePortalStore } from "@stores";
-import ParallaxProjectGrid from "./ParallaxProjectGrid";
 
 const Projects = () => {
   const { camera } = useThree();
@@ -23,10 +21,9 @@ const Projects = () => {
 
   return (
     <group>
-      <ParallaxProjectGrid />
+      {/* BentoProjectGrid is rendered at page level to avoid R3F reconciler issues */}
     </group>
   );
 };
 
 export default Projects;
-
