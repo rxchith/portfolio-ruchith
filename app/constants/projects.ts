@@ -2,6 +2,13 @@ import { Project } from "../types";
 
 export const PROJECTS: Project[] = [
   {
+    title: "Forex Card Management App",
+    date: "JUL 2025",
+    subtext: "Fintech App Design",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/original/dd2c56253472527.Y3JvcCwxMTI1LDg3OSwwLDM5NQ.png",
+    url: "https://www.behance.net/gallery/253472527/Forex-Card-Management-App"
+  },
+  {
     title: "Pluto Money: Gamified UX",
     date: "FEB 2025",
     subtext: "App Onboarding",
